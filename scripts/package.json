@@ -1,0 +1,14 @@
+{
+  "dependencies": {},
+  "devDependencies": {
+    "@types/bun": "^1.3.14",
+    "typescript": "5",
+    "puppeteer-core": "^24.0.0"
+  },
+  "scripts": {
+    "test:playback": "bun playback-harness.ts --check",
+    "build": "tsc -p ../shared/tsconfig.json && { [ -d ../web/node_modules ] || npm --prefix ../web ci || npm --prefix ../web install; } && npm --prefix ../web run build",
+    "typecheck": "tsc --noEmit -p ../sync-server/tsconfig.json",
+    "check": "npm --prefix ../sync-server test && npm run test:playback && ./assert-shared-parity.sh --repo-only"
+  }
+}
