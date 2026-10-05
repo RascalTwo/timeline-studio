@@ -1,0 +1,502 @@
+{
+	"schemaVersion": 10,
+	"title": "Demo — opening the second bakery (anyone can edit this)",
+	"start": "2026-09-07",
+	"timeZone": "America/Chicago",
+	"sprint": {
+		"weeks": 2,
+		"start": "2026-09-07"
+	},
+	"hours": {
+		"week": {
+			"sun": [],
+			"mon": [
+				[
+					"08:00",
+					"16:00"
+				]
+			],
+			"tue": [
+				[
+					"08:00",
+					"16:00"
+				]
+			],
+			"wed": [
+				[
+					"08:00",
+					"16:00"
+				]
+			],
+			"thu": [
+				[
+					"08:00",
+					"16:00"
+				]
+			],
+			"fri": [
+				[
+					"08:00",
+					"16:00"
+				]
+			],
+			"sat": []
+		},
+		"dates": {
+			"2026-09-24": []
+		}
+	},
+	"channelLabels": {
+		"colors": "Project"
+	},
+	"lanes": [
+		{
+			"id": "L1",
+			"label": "Me",
+			"cap": 1,
+			"short": "Me"
+		},
+		{
+			"id": "L2",
+			"label": "Fit-out crew",
+			"cap": 2,
+			"short": "Crew"
+		},
+		{
+			"id": "L3",
+			"label": "Waiting on other people",
+			"cap": 1,
+			"short": "Others"
+		}
+	],
+	"colors": [
+		{
+			"id": "site",
+			"label": "The site",
+			"color": "#5aa9f0"
+		},
+		{
+			"id": "kit",
+			"label": "Equipment",
+			"color": "#f0a35a"
+		},
+		{
+			"id": "staff",
+			"label": "People",
+			"color": "#7fd18d"
+		},
+		{
+			"id": "legal",
+			"label": "Paperwork",
+			"color": "#d88ce0"
+		}
+	],
+	"borders": [
+		{
+			"id": "b0",
+			"label": "not applicable",
+			"style": "none"
+		},
+		{
+			"id": "b1",
+			"label": "reversible",
+			"style": "dotted"
+		},
+		{
+			"id": "b2",
+			"label": "one-way door",
+			"style": "solid"
+		}
+	],
+	"fills": [
+		{
+			"id": "f1",
+			"label": "known",
+			"pattern": "underline"
+		},
+		{
+			"id": "f2",
+			"label": "estimated",
+			"pattern": "solid"
+		},
+		{
+			"id": "f3",
+			"label": "guessed",
+			"pattern": "hatch"
+		}
+	],
+	"shapes": [
+		{
+			"id": "s1",
+			"label": "task",
+			"shape": "soft"
+		},
+		{
+			"id": "s2",
+			"label": "decision",
+			"shape": "diamond"
+		},
+		{
+			"id": "s3",
+			"label": "opening",
+			"shape": "chevron"
+		}
+	],
+	"milestones": [
+		{
+			"id": "m1",
+			"label": "Soft opening",
+			"date": "2026-10-19"
+		},
+		{
+			"id": "m2",
+			"label": "Grand opening",
+			"date": "2026-11-09"
+		}
+	],
+	"tasks": [
+		{
+			"id": "lease",
+			"label": "Sign the lease",
+			"lane": "L1",
+			"border": "b2",
+			"fill": "f1",
+			"shape": "s2",
+			"color": [
+				"site",
+				"legal"
+			],
+			"dur": 480,
+			"deps": [],
+			"ms": "m1",
+			"desc": "The **one-way door** of this plan — see the solid border.\n\nNotice the bar is as wide as the work *actually took*, while `Duration` still holds the estimate. The gap between them is the tick on the bar.",
+			"url": "https://example.com/lease.pdf",
+			"ref": "LEASE-114",
+			"createdAt": "2026-09-07T09:00:00.000Z",
+			"sessions": [
+				{
+					"start": "2026-09-07T13:00:00.000Z",
+					"stop": "2026-09-07T21:00:00.000Z"
+				}
+			],
+			"done": true
+		},
+		{
+			"id": "survey",
+			"label": "Survey the unit",
+			"lane": "L2",
+			"border": "b1",
+			"fill": "f1",
+			"shape": "s1",
+			"color": [
+				"site"
+			],
+			"dur": 960,
+			"deps": [
+				"lease"
+			],
+			"ms": "m1",
+			"desc": "Finished at **16:30**, not at the end of the day — dates carry a time now.",
+			"createdAt": "2026-09-07T09:00:00.000Z",
+			"sessions": [
+				{
+					"start": "2026-09-08T13:00:00.000Z",
+					"stop": "2026-09-10T21:30:00.000Z"
+				}
+			],
+			"done": true
+		},
+		{
+			"id": "plans",
+			"label": "Draw up the fit-out plans",
+			"lane": "L2",
+			"border": "b1",
+			"fill": "f2",
+			"shape": "s1",
+			"color": [
+				"site"
+			],
+			"dur": 1440,
+			"deps": [
+				"survey"
+			],
+			"ms": "m1",
+			"sessions": [
+				{
+					"start": "2026-09-10T13:00:00.000Z",
+					"stop": "2026-09-10T21:00:00.000Z"
+				},
+				{
+					"start": "2026-09-11T13:00:00.000Z",
+					"stop": "2026-09-11T17:30:00.000Z"
+				}
+			],
+			"desc": "In progress: a start with no finish.",
+			"refinedAt": "2026-09-09T17:00:00.000Z",
+			"createdAt": "2026-09-07T09:00:00.000Z",
+			"comments": [
+				{
+					"id": "c-plans-1",
+					"text": "Architect has the survey. First draft of the layout due end of the week.",
+					"at": "2026-09-09T15:10:00.000Z",
+					"by": "Sam"
+				},
+				{
+					"id": "c-plans-2",
+					"text": "Draft in — the oven wall has to move **40 cm** to clear the extraction duct. Revised plans by Monday.",
+					"at": "2026-09-11T20:45:00.000Z",
+					"by": "Priya",
+					"editedAt": "2026-09-11T21:02:00.000Z"
+				}
+			]
+		},
+		{
+			"id": "permit",
+			"label": "Council grants the change-of-use permit",
+			"lane": "L3",
+			"border": "b0",
+			"fill": "f3",
+			"shape": "s1",
+			"color": [
+				"legal"
+			],
+			"dur": 5760,
+			"deps": [
+				"plans"
+			],
+			"ms": "m1",
+			"noQueue": true,
+			"desc": "Somebody else's work, so it is **their** task — named after them — and it is set to *run in parallel* — twelve days that do not consume the crew.\n\nThis is the whole convention: there is no \"waiting on\" field. You depend on their task.",
+			"refinedAt": "2026-09-09T17:00:00.000Z",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "kit-quote",
+			"label": "Get three quotes for the ovens",
+			"lane": "L1",
+			"border": "b1",
+			"fill": "f1",
+			"shape": "s1",
+			"color": [
+				"kit"
+			],
+			"dur": 480,
+			"deps": [],
+			"ms": "m1",
+			"ref": "QUOTE-3",
+			"createdAt": "2026-09-07T09:00:00.000Z",
+			"sessions": [
+				{
+					"start": "2026-09-11T13:00:00.000Z",
+					"stop": "2026-09-11T21:00:00.000Z"
+				}
+			],
+			"done": true
+		},
+		{
+			"id": "oven",
+			"label": "Decide: gas or electric ovens",
+			"lane": "L1",
+			"border": "b2",
+			"fill": "f1",
+			"shape": "s2",
+			"color": [
+				"kit"
+			],
+			"dur": 60,
+			"deps": [
+				"kit-quote"
+			],
+			"ms": "m1",
+			"desc": "A decision, drawn as a **diamond** — that is the *shape* channel, not the duration. It still takes an hour of somebody's day, because nothing takes no time.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "order-oven",
+			"label": "Order the ovens",
+			"lane": "L2",
+			"border": "b1",
+			"fill": "f2",
+			"shape": "s1",
+			"color": [
+				"kit"
+			],
+			"dur": 480,
+			"deps": [
+				"oven"
+			],
+			"ms": "m1",
+			"due": "2026-09-27T05:00:00.000Z",
+			"desc": "Has a *deadline* — look for the marker on the bar and the slack beside it.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "leadtime",
+			"label": "Oven lead time (the supplier)",
+			"lane": "L3",
+			"border": "b0",
+			"fill": "f3",
+			"shape": "s1",
+			"color": [
+				"kit"
+			],
+			"dur": 10080,
+			"deps": [
+				"order-oven"
+			],
+			"ms": "m1",
+			"noQueue": true,
+			"desc": "Three weeks of waiting that belongs to the supplier, not to us.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "build",
+			"label": "Fit out the kitchen",
+			"lane": "L2",
+			"border": "b1",
+			"fill": "f2",
+			"shape": "s1",
+			"color": [
+				"site",
+				"kit"
+			],
+			"dur": 3840,
+			"deps": [
+				"permit",
+				"plans"
+			],
+			"ms": "m1",
+			"desc": "Two projects at once — the bar is banded.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "install",
+			"label": "Install and commission the ovens",
+			"lane": "L2",
+			"border": "b1",
+			"fill": "f2",
+			"shape": "s1",
+			"color": [
+				"kit"
+			],
+			"dur": 960,
+			"deps": [
+				"build",
+				"leadtime"
+			],
+			"ms": "m1",
+			"notBefore": "2026-10-07T05:00:00.000Z",
+			"desc": "Cannot start before the gas is signed off, whatever else finishes.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "hire",
+			"label": "Hire and train two bakers",
+			"lane": "L1",
+			"border": "b1",
+			"fill": "f3",
+			"shape": "s1",
+			"color": [
+				"staff"
+			],
+			"dur": 2400,
+			"deps": [],
+			"ms": "m1",
+			"desc": "Nothing blocks this — it waits only for a free slot in its lane.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "hygiene",
+			"label": "Food hygiene inspection (the inspector)",
+			"lane": "L3",
+			"border": "b2",
+			"fill": "f2",
+			"shape": "s1",
+			"color": [
+				"legal"
+			],
+			"dur": 480,
+			"deps": [
+				"install",
+				"hire"
+			],
+			"ms": "m1",
+			"noQueue": true,
+			"due": "2026-10-18T05:00:00.000Z",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "softopen",
+			"label": "Soft opening for friends and family",
+			"lane": "L1",
+			"border": "b2",
+			"fill": "f1",
+			"shape": "s3",
+			"color": [
+				"staff",
+				"site"
+			],
+			"dur": 480,
+			"deps": [
+				"hygiene"
+			],
+			"ms": "m1",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "signage",
+			"label": "Commission the neon sign",
+			"lane": "L1",
+			"border": "b1",
+			"fill": "f3",
+			"shape": "s1",
+			"color": [
+				"site"
+			],
+			"dur": 960,
+			"deps": [],
+			"ms": "m2",
+			"desc": "**Cancelled**, not deleted. It stays on the record and stops holding anything up.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "press",
+			"label": "Press and local radio",
+			"lane": "L1",
+			"border": "b1",
+			"fill": "f2",
+			"shape": "s1",
+			"color": [
+				"staff"
+			],
+			"dur": 960,
+			"deps": [
+				"softopen"
+			],
+			"ms": "m2",
+			"url": "https://example.com/press-kit",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "grand",
+			"label": "Grand opening",
+			"lane": "L1",
+			"border": "b2",
+			"fill": "f2",
+			"shape": "s3",
+			"color": [
+				"site",
+				"staff",
+				"kit",
+				"legal"
+			],
+			"dur": 480,
+			"deps": [
+				"press"
+			],
+			"ms": "m2",
+			"desc": "Every project at once, so the bar shows all four bands.\n\n| what | when |\n| --- | --- |\n| doors open | 09:00 |\n| ribbon | 10:00 |\n\nDescriptions are **GitHub-flavoured markdown** — tables, `code`, lists, the lot.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		}
+	]
+}
