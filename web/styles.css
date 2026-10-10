@@ -1,0 +1,1667 @@
+  /* ---- THE VIZ KIT, INLINED -------------------------------------------------
+     This page used to `<link>` /_kit/viz-kit.css and `import` four helpers from
+     /_kit/viz.js, both served at an absolute path by the explorables viz dev
+     server out of the viz skill's own kit/ directory. Nothing serves that path
+     here and nothing should: this page ships as one file behind its own server,
+     so a copy of ten tokens and four one-liners is cheaper than a build step
+     that would inline them anyway. Only what this page reads came across — the
+     kit's components (.card, .pill, .viz-header, .flow) are unused here, as are
+     its --c1..--c8, --faint, --panel-2, --border, --mono and --r tokens.
+     Source: ai-setup/skills/viz/kit/viz-kit.css and kit/viz.js.
+
+     `--line` WAS USED THROUGHOUT THE STYLE BLOCK BELOW AND DEFINED NOWHERE until
+     2026-09-20 — not here, and not in the kit, whose border token is spelled
+     `--border`. Every `border:1px solid var(--line)` was therefore an invalid
+     substitution and every bordered surface in the app had no border at all.
+     It rendered that way in the original too and was copied rather than fixed,
+     on the grounds that giving it a value changes how a tool in daily use looks
+     and that is its own decision. It is now taken: `--line` is the kit's
+     `--border`, #30363d, defined below. */
+  :root {
+    /* Surfaces, back to front */
+    --bg: #0d1117;
+    --panel: #161b22;
+    /* THE ONE THE COPY LEFT BEHIND. `border:1px solid var(--line)` appears fifty
+       times below and `--line` was defined nowhere — not here, and not in the
+       kit, whose token is spelled `--border`. An undefined custom property makes
+       the whole declaration an invalid substitution, so every one of those fifty
+       borders computed `0px none` and NOTHING IN THIS APP HAD A BORDER. The only
+       thing separating a button from a run of text was its background colour,
+       which is why an action painted `--panel` sitting on a `--panel` panel read
+       as prose, twice, before anyone worked out why.
+       #30363d IS THE KIT'S OWN `--border`, not a colour chosen here. `--bg` and
+       `--panel` two lines up were copied from that file verbatim; this is the
+       third value of the same set, finally arriving. */
+    --line: #30363d;
+    /* Text — two of the kit's three tiers */
+    --text: #e6edf3;
+    --muted: #8b949e;
+    /* Intent — accents that carry meaning */
+    --accent: #58a6ff;          /* primary / links / selection */
+    --good:   #3fb950;          /* success / healthy / "yes" */
+    --warn:   #d29922;          /* caution / pending */
+    --danger: #f85149;          /* error / blocked / "no" */
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    /* TELL THE BROWSER THE PAGE IS DARK. Without this every native control renders
+       in the light scheme — which is why the date fields were white boxes on a dark
+       panel, along with their calendar popups and spin buttons. A theme rule can
+       repaint the box; only this repaints what the platform draws inside it. */
+    color-scheme: dark;
+  }
+  *, *::before, *::after { box-sizing:border-box }
+  html, body { margin:0; height:100% }
+  /* Paint the canvas itself. body is height:100%, so on a page taller than the
+     viewport the area BELOW the body box would reveal the browser's lighter
+     default when scrolled — a horizontal "line" mid-page where --bg ends. */
+  html { background-color:var(--bg) }
+  body {
+    /* A faint top-glow over the flat background, faded out well past the fold so
+       the glow -> --bg transition never forms a visible edge mid-page. */
+    background:
+      radial-gradient(1600px 1000px at 50% -30%, color-mix(in srgb, var(--panel) 55%, transparent), transparent 75%),
+      var(--bg);
+    color:var(--text);
+    font:14px/1.5 var(--sans);
+    -webkit-font-smoothing:antialiased;
+    text-rendering:optimizeLegibility;
+  }
+  /* Built to be driven in front of a room, which drives most of these choices:
+     big type, high contrast, the finish date as the largest thing on screen, and
+     every control reachable without a menu. */
+  /* THE WINDOW NO LONGER SCROLLS; #chart DOES. The horizontal scrollbar used to
+     sit at the bottom of #chart, and #chart was as tall as every row in the plan
+     — so on a plan of any size, reaching the scrollbar meant scrolling the page
+     past every task first. Making the chart a viewport-height box puts its
+     scrollbar where a scrollbar belongs, at the bottom of what you are looking at.
+
+     SAFE BECAUSE ONLY THREE THINGS ARE IN FLOW. #top, #chart and #graph are the
+     body's only non-fixed children; every panel, popover and modal is
+     position:fixed and is not a flex item at all. */
+  body { margin:0; font-family:ui-sans-serif,system-ui,sans-serif;
+         display:flex; flex-direction:column }
+  #top { flex:0 0 auto }
+  /* `min-height:0` is the load-bearing half. A flex item's default min-height is
+     `auto`, which means "never shrink below your content" — so without this the
+     chart would grow to fit all 130 rows exactly as before and the whole change
+     would silently do nothing. */
+  #chart, #graph, #board, #cal { flex:1 1 auto; min-height:0 }
+  .bar-wrap { position:relative }
+
+  /* ---- milestone bar --------------------------------------------------------
+     This replaces both the page heading and the big verdict block. Those cost
+     ~130px of vertical space to say one sentence, on a page whose whole job is
+     showing bars; the same information now rides on the milestone chips, where
+     it is attached to the date it is about. Colour still carries the verdict at
+     a glance — that part was worth keeping.
+
+     Each chip is a real milestone: editable date, editable name, its own line on
+     the chart, and its own pass/fail computed from the tasks assigned to it. */
+  #top { padding:10px 14px 12px; position:relative }
+  /* Collapsed hides the controls but keeps ONE line: which plan, and whether it
+     makes the date. Losing that too would mean expanding the bar every time you
+     wanted the answer the chart exists to give. */
+  #collapse { position:absolute; top:6px; right:8px; z-index:2; border:1px solid var(--line);
+              background:var(--panel); color:var(--muted); cursor:pointer; font-size:12px;
+              line-height:1; padding:4px 8px; border-radius:6px }
+  #collapse:hover { color:var(--text); border-color:var(--accent) }
+  #mini { display:none; font-size:13px; padding-right:40px }
+  #mini b { color:var(--text) }
+  #top.collapsed { padding:7px 14px }
+  #top.collapsed .toolbar, #top.collapsed #msbar,
+  #top.collapsed #legend { display:none }
+  #top.collapsed #mini { display:block }
+  .sep { width:1px; align-self:stretch; background:var(--line); margin:0 2px }
+  .grow { flex:1 1 auto }
+  .lbl { font-size:12px; color:var(--muted); display:inline-flex; align-items:center; gap:6px }
+  #notice:empty { display:none }
+  #notice { margin-top:9px }
+  .notice-strip { display:flex; gap:8px; align-items:flex-start; padding:6px 10px; font-size:13px;
+                  border:1px solid var(--line); border-left:3px solid var(--warn); border-radius:6px }
+  /* Capped, for the same reason as the last-save note below: a long notice must not push
+     the chart off the screen. It scrolls inside instead. */
+  .notice-text { flex:1 1 auto; max-height:6.5em; overflow:auto; color:var(--text) }
+  .notice-text > :first-child { margin-top:0 } .notice-text > :last-child { margin-bottom:0 }
+  .notice-strip button, .notice-chip { font-size:12px; padding:1px 6px }
+  #top.collapsed #notice { margin-top:4px }
+  .notice-edit { display:flex; flex-direction:column; align-items:stretch; margin-top:12px }
+  .notice-edit textarea { width:100%; font:inherit; color:var(--text) }
+  #msbar { display:flex; gap:8px; flex-wrap:wrap; align-items:flex-start; margin-top:9px }
+  .ms.lastsave { margin-left:auto; border-left-color:var(--muted); max-width:340px; cursor:pointer }
+  .ms.lastsave .nm { color:var(--muted) }
+  /* Clamped, because a long note grew the whole toolbar row and pushed the chart
+     off the screen. Clicking the note toggles `.open` and shows all of it. */
+  .ms.lastsave .dt { color:var(--text); white-space:normal; display:-webkit-box;
+                     -webkit-box-orient:vertical; -webkit-line-clamp:4; overflow:hidden }
+  .ms.lastsave .dt.open { -webkit-line-clamp:none }
+  .ms.lastsave:hover { border-left-color:var(--accent) }
+  /* Fixed width, not min-width: the chips hold a free-text name and a date
+     input, both of which want to be 100% wide, so `min-width` let the first chip
+     stretch to fill the row and shoved everything after it out of alignment. */
+  .ms { position:relative; flex:0 0 auto; width:208px;
+        border:1px solid var(--line); border-left-width:4px; border-radius:7px;
+        padding:5px 26px 6px 9px; background:var(--panel) }
+  .ms .nm { font-size:12px; font-weight:700; color:var(--text) }
+  .ms .dt { font-size:11px; color:var(--muted) }
+  /* WHAT IS LEFT, not what there was. Every other line in these cards is muted
+     context; this is the one somebody is actually reading the card for, so it
+     gets the text colour and the weight and the total stays quiet behind it. */
+  .ms .dt.left { color:var(--text); font-weight:600 }
+  .ms .vd { font-size:13px; font-weight:700; margin-top:2px }
+  .ms.ok   { border-left-color:var(--good) }   .ms.ok   .vd { color:var(--good) }
+  .ms.tight{ border-left-color:var(--warn) }   .ms.tight .vd { color:var(--warn) }
+  .ms.late { border-left-color:var(--danger) } .ms.late .vd { color:var(--danger) }
+  .ms.empty{ border-left-color:var(--line) }   .ms.empty .vd { color:var(--muted) }
+  .ms.binding { box-shadow:0 0 0 1px var(--accent) inset }
+  /* A MILESTONE CHIP IS ALSO ITS OWN LEGEND ENTRY. Every other channel answers
+     "which tasks are these?" by clicking the swatch that names them, and this was
+     the one that already had a chip on screen carrying the count and no filter
+     behind it — so the chip you read the number off is the chip you press.
+     The inputs and the × keep their own cursor and their own clicks: a card whose
+     title is an editable field must not swallow the caret to answer a different
+     question. `.on` comes after `.binding` so a chip that is both reads as
+     selected first, which is the state you just changed. */
+  .ms[data-ms], .ms.reord { cursor:pointer }
+  .ms[data-ms]:hover, .ms.reord:hover { border-color:var(--accent) }
+  .ms[data-ms] input { cursor:auto }
+  /* The tint does the work, not the ring. `binding` is already a 1px accent ring
+     on a chip that may also be the selected one, and two blue rings a pixel apart
+     is not a difference anyone reads across a room — "which one did I click" and
+     "which one sets the start date" have to be answerable at a glance. */
+  .ms.on { background:rgba(122,180,255,.26); box-shadow:0 0 0 2px var(--accent) inset }
+  .ms input { background:none; border:0; padding:0; color:inherit; font:inherit; width:100% }
+  .ms input.d { color:var(--muted); font-size:11px; margin-top:1px }
+  .ms input.n { font-size:12px; font-weight:700 }
+  .ms .x { position:absolute; top:4px; right:5px; border:0; background:none;
+           color:var(--muted); cursor:pointer; font-size:15px; line-height:1; padding:1px 4px }
+  .ms .x:hover { color:var(--danger) }
+  #addms { flex:0 0 auto; font-size:12px; padding:7px 10px; margin-top:2px }
+
+  .toolbar { display:flex; gap:10px; align-items:center; flex-wrap:wrap }
+  /* The collapse ⌃ is absolutely positioned in #top's top-right corner, so it is
+     outside the toolbar's flex flow and cannot push anything. Right-aligning the
+     toolbar's last group put ⚙ straight underneath it — 28px of overlap on two
+     controls that both live in the corner. Reserve the corner instead. */
+  #top > .toolbar { padding-right:38px }
+  /* A CONTAINER THAT IS NOT A BOX. React has to own an element to render into,
+     and every one of these dropdowns lives inside a `<label class="lbl">` whose
+     layout was written around the select itself. `display:contents` makes the
+     wrapper generate no box, so the select participates in the label's layout
+     exactly as it did when the markup held it directly. */
+  /* THE ORDER CHIP'S PROGRESS BAR. Its duration is set inline from the last
+     measured search, so this only describes the shape. `forwards` holds it at
+     full rather than snapping back, because the run finishing is what removes
+     the bar — a bar that resets looks like the work restarting. */
+  .obar { display:block; width:64px; height:4px; border-radius:2px;
+          background:var(--panel); overflow:hidden }
+  .obar i { display:block; height:100%; width:0; background:var(--accent);
+            animation-name:obar; animation-timing-function:linear; animation-fill-mode:forwards }
+  @keyframes obar { to { width:100% } }
+
+  .pickhost, .nobox { display: contents }
+
+  /* `datetime-local` ADDED. This rule enumerates the types it styles, which is the
+     trap the `type=search` note further down already records: a type not named here
+     falls through to the browser default and lands a white box in a dark panel.
+     The date fields have always done exactly that; there are four of them now, so
+     it stopped being possible to miss. */
+  select, button, input[type=number], input[type=text], input[type=datetime-local] {
+    background:var(--panel); color:var(--text); border:1px solid var(--line);
+    border-radius:6px; padding:6px 10px; font:inherit; font-size:13px }
+  button { cursor:pointer }
+  button:hover { border-color:var(--accent) }
+  button.on { background:var(--accent); color:#05131f; border-color:var(--accent); font-weight:600 }
+  button:disabled { opacity:.4; cursor:default }
+  .dirty { color:var(--warn); font-size:12px }
+
+  /* ---- the chart ---------------------------------------------------------- */
+  /* `overflow:auto`, not `overflow-x` — the chart owns both axes now. The bottom
+     margin keeps the scrollbar clear of the inspector, which is fixed and would
+     otherwise sit on top of it; `--insph` is measured and set by `padForPanel`. */
+  #chart { position:relative; margin-top:14px; overflow:auto; padding-bottom:8px;
+           margin-bottom:var(--insph, 0px);
+           /* THE STICKY AXIS IS 56px: scrolling a row into view (selecting it, keyboard focus) must stop
+              short of it, or the row lands underneath the header. */
+           scroll-padding-top:56px }
+  #grid  { position:relative }
+  /* THE INDEX STAYS WHERE YOU CAN READ IT. Both of these used to scroll away
+     with the chart, which never showed while the whole plan fitted the window and
+     nobody scrolled. Zoom makes scrolling the normal case, and a Gantt row whose
+     name has slid off the left is a bar belonging to nobody. `position:sticky`
+     pins them to the scroller's edge; they need an opaque background because the
+     chart now passes underneath them. */
+  .lane-head { font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+               color:var(--muted); padding:14px 0 4px;
+               position:sticky; left:0; z-index:3; background:var(--bg) }
+  .row { position:relative; height:26px }
+  /* A folded lane keeps ONE row and stacks its bars into as many tracks as the
+     work actually overlaps in. The grip goes when there is more than one track:
+     it overhangs 22px against a bar that may be 9px tall, so it would reach into
+     the track below and resize the wrong task. Folding is for getting a team out
+     of the way, and losing a drag handle in that state is the right trade. */
+  .row.thin .grip { display:none }
+  /* THE GRAPH LENS. Sized like #chart so switching does not resize the document
+     and trip the scroll-clamp this file has two scars from. */
+  #graph { margin-top:10px }
+  /* [hidden] IS display:none AND LOSES TO A CLASS THAT SETS display. `.lbl` is an
+     inline-flex, so hiding the zoom control in graph mode did nothing at all
+     until this said so — the same specificity trap the `.k` swatch had. */
+  .lbl[hidden] { display:none }
+  /* The pan/zoom cluster reads as ONE control, so its buttons sit flush against
+     each other rather than carrying the toolbar's usual gap. `#navtoggle.on`
+     marks the fold open, the same way every other toggle here says so. */
+  #navpad { display:inline-flex; gap:2px; margin-left:4px }
+  /* AND THE SAME TRAP THE RULE ABOVE WARNS ABOUT, walked straight into. `[hidden]`
+     is `display:none` from the UA sheet and loses to any rule that sets `display`
+     — so the line above un-hid the folded cluster on every load. Caught by looking
+     at the toolbar; the JS check passed, because `el.hidden` was true the whole
+     time and says nothing about whether the thing is on screen. */
+  #navpad[hidden] { display:none }
+  #navpad button { min-width:26px; padding:4px 6px }
+  /* NO `.on` RULE OF ITS OWN. `button.on` above already fills with --accent and
+     sets dark text for contrast; overriding `color` back to --accent painted the
+     glyph the same blue as its own background, which read as a solid blue square
+     with nothing in it. The house style is to let `button.on` do this — see
+     `#eye.on`, which adds nothing either. */
+  #cy { height:62vh; min-height:340px; border:1px solid var(--line); border-radius:8px;
+        background:var(--bg) }
+  #graph .toolbar { margin-bottom:8px }
+  /* THE CALENDAR LENS. A header of days over one scroller holding the hour
+     gutter and a column per day; `drawCal` sizes the grid to 24 hours at the
+     zoom's pixels per hour. Kind of time is the block's look: a session is solid,
+     a planned stretch tinted with a solid rim, a forecast grey with a stripe of
+     the project colour. Opacity stays the filter's (`.dim`). */
+  #cal { margin-top:10px; display:flex; flex-direction:column; min-height:0 }
+  #cal[hidden] { display:none }
+  #calbar { margin-bottom:6px }
+  #caltitle { font-weight:600; color:var(--text) }
+  #calhead, .calgrid { display:grid; grid-template-columns:48px repeat(7, minmax(0,1fr)) }
+  #cal.day #calhead, #cal.day .calgrid { grid-template-columns:48px minmax(0,1fr) }
+  #calhead { border-bottom:1px solid var(--line) }
+  .caldh { text-align:center; font-size:12px; color:var(--muted); font-weight:600; padding:4px 0; cursor:pointer }
+  .caldh.today { color:var(--good) }
+  #calbody { flex:1 1 auto; min-height:0; overflow-y:auto; scrollbar-gutter:stable }
+  #cal #calhead { scrollbar-gutter:stable; overflow-y:hidden }
+  .calgrid { position:relative }
+  .calgut { position:relative }
+  .calhl { position:absolute; right:6px; font-size:11px; color:var(--muted); transform:translateY(-50%) }
+  .calday { position:relative; border-left:1px solid var(--line);
+            background:repeating-linear-gradient(to bottom, transparent 0 calc(var(--pxh) - 1px),
+              color-mix(in srgb, var(--line) 60%, transparent) calc(var(--pxh) - 1px) var(--pxh)) }
+  .caloff { position:absolute; left:0; right:0; background:color-mix(in srgb, var(--muted) 10%, transparent); pointer-events:none }
+  .calnow { position:absolute; left:0; right:0; border-top:2px solid var(--good); z-index:3; pointer-events:none }
+  .calev { position:absolute; box-sizing:border-box; border-radius:4px; overflow:hidden; cursor:pointer;
+           font-size:11px; line-height:1.25; padding:1px 4px; white-space:nowrap; text-overflow:ellipsis; color:#111 }
+  .calev > span { position:relative; z-index:1 }
+  .calev.session { background-color:var(--c) }
+  .calev.planned { background-color:color-mix(in srgb, var(--c) 60%, var(--bg)); border:2px solid var(--c); font-weight:700 }
+  .calev.computed { background-color:color-mix(in srgb, var(--muted) 16%, transparent); color:var(--muted);
+                    font-style:italic; padding-left:8px }
+  .calev .stripe { position:absolute; left:0; top:0; bottom:0; width:4px }
+  .calev.tick { padding:0; border:none; border-radius:1px }
+  .calev.sel { outline:2px solid var(--accent); outline-offset:1px; z-index:2 }
+  .calev.dim { opacity:.3 }
+  /* THE KANBAN LENS. Three columns side by side, each scrolling on its own so a
+     long Blocked list does not push Done off screen. */
+  #board { margin-top:10px; display:grid; grid-template-columns:repeat(3, minmax(0,1fr));
+           gap:10px; overflow:hidden }
+  #board[hidden] { display:none }
+  #board .col { display:flex; flex-direction:column; min-height:0; overflow:auto;
+                border:1px solid var(--line); border-radius:8px; padding:8px; background:var(--panel) }
+  #board .col h3 { margin:0 0 8px; font-size:13px; color:var(--muted); display:flex;
+                   gap:6px; align-items:center }
+  #board .col h3 input { width:5em; text-align:right }
+  #board .card { border:1px solid var(--line); border-left:4px solid var(--c, var(--line));
+                 border-radius:6px; padding:6px 8px; margin-bottom:6px; background:var(--bg);
+                 cursor:pointer; font-size:13px; color:var(--text) }
+  #board .card.sel { outline:2px solid var(--accent) }
+  #board .card.dim { opacity:.35 }
+  #board .card .meta { color:var(--muted); font-size:11px; margin-top:3px }
+  #board .card .why { color:var(--warn) }
+  /* Not `.who`: that class is the presence chip's, a flex box, and a name in a
+     sentence must stay inline. */
+  #board .card .why .ahead { color:var(--text); font-weight:600 }
+  #board .card.drop-above { box-shadow:0 -3px 0 var(--accent) }
+  #board .card.drop-below { box-shadow:0 3px 0 var(--accent) }
+  #board .col.over { outline:2px dashed var(--accent); outline-offset:-2px }
+  #board .counts { min-width:0; font-size:11px; font-weight:normal; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+  #board .divider { margin:6px 0 8px; padding-top:6px; border-top:1px solid var(--line);
+                    font-size:11px; color:var(--muted) }
+  /* COMMENTS, at the foot of the Inspector: a thread, oldest first. */
+  .comments { margin-top:12px; display:flex; flex-direction:column; gap:6px }
+  .comment { border-left:2px solid var(--line); padding:2px 0 2px 8px }
+  .comment .chead { font-size:11px; color:var(--muted); display:flex; gap:4px; align-items:baseline }
+  .comment .chead b { color:var(--text) }
+  .comment .cact { margin-left:auto; display:flex; gap:4px }
+  .comment .cact button { font-size:10px; padding:0 5px }
+  .comment .mdview { font-size:13px }
+  .cform { display:flex; gap:6px; align-items:flex-start }
+  /* THE DESCRIPTION'S BOX, exactly — it had none of its own and fell back to the
+     browser's field colours. */
+  .cform textarea { flex:1; min-height:34px; box-sizing:border-box; resize:vertical; field-sizing:content;
+                    font:inherit; font-size:13px; line-height:1.45; padding:7px 9px;
+                    background:var(--bg); color:var(--text); border:1px solid var(--line); border-radius:6px }
+  .cform textarea:focus { outline:none; border-color:var(--accent) }
+  #cyfail { padding:24px; color:var(--muted); font-size:13px; line-height:1.5 }
+  /* ELAPSED, DRAWN IN THE ROW'S OWN SLACK. A full-height bar is 18px at top:4px
+     inside a 26px row, so there are 4px underneath already doing nothing — the
+     strip costs the chart no space at all. A SIBLING of .bar rather than a child
+     of it, because elapsed time can run past the estimate's right-hand edge and
+     that overhang is the entire reason to draw it. pointer-events:none for the
+     same reason the colour bands have it: a mark must never swallow the drag. */
+  /* WORK SESSIONS: a solid segment per stretch worked, the bar behind them faint so the gaps read as gaps.
+     Children of the bar but never its hit target, like the colour bands. `rest` is what is forecast to
+     remain, from now. */
+  .bar.hasw > .shape { opacity:.1 }
+  /* Each segment WEARS THE BAR'S LOOK (a `.shape` inside it, see BarLook), so shape, rim, fill pattern and
+     colour bands are the task's own. `run` is a session still going: a bright edge at now. */
+  .wseg { position:absolute; top:0; bottom:0; pointer-events:none }
+  .wseg.run::after { content:""; position:absolute; top:0; bottom:0; right:0; width:2px; background:rgba(255,255,255,.8) }
+  /* THE NIGHT CUT OUT OF A FORECAST BAR: the row's own colour over the part of the bar that falls outside the
+     working hours, so the bar keeps its shape, rim and fill and simply is not there while nobody works. */
+  .wgap { position:absolute; top:-1px; bottom:-1px; background:var(--bg); pointer-events:none }
+  .elapsed, .baseline { position:absolute; top:23px; height:3px; border-radius:2px;
+                        background:var(--muted); pointer-events:none }
+  /* DONE-NESS IS TYPOGRAPHY, and deliberately not a sixth thing for the bar to
+     mean. Position and length are the dates, hue is the system, the rim is the
+     environment, the texture is the confidence, and opacity belongs to the
+     filter — the label was the one channel left that costs the chart nothing. */
+  .rowlabel.done { text-decoration:line-through; text-decoration-thickness:1px }
+  /* The estimate's end on a finished bar. Same vocabulary as the amber constraint
+     tick — a thin vertical rule on the bar, not a new channel: hue is the system,
+     the rim is the environment, the texture is the confidence, and none of them
+     are touched. Danger when the work outran the estimate, good when it beat it,
+     muted when it landed on it. */
+  .esttick { position:absolute; top:-2px; width:2px; height:22px; border-radius:1px;
+             background:var(--muted); pointer-events:none; z-index:2 }
+  .esttick.over  { background:var(--danger) }
+  .esttick.early { background:var(--good) }
+  .estlead { position:absolute; top:8px; height:2px; pointer-events:none; opacity:.8;
+             background:repeating-linear-gradient(90deg, var(--good) 0 3px, transparent 3px 6px) }
+
+  /* ---- the deadline marker -------------------------------------------------
+     TALLER THAN THE ESTIMATE TICK AND CAPPED, so the two are not confused where
+     both are on one bar: the estimate tick says how the work went, this says
+     what it owes. Danger when the scheduler lands it past the date, good when
+     there is room. `pointer-events:none` on both, like the estimate tick — the
+     bar underneath is a drag target and a 2px child that swallowed the press
+     would make a task un-draggable at exactly one x position. */
+  .duetick { position:absolute; top:-4px; width:2px; height:26px; border-radius:1px;
+             background:var(--good); pointer-events:none; z-index:2 }
+  .duetick::before { content:""; position:absolute; left:-2px; top:0; width:6px; height:3px;
+                     border-radius:1px; background:inherit }
+  .duetick.late { background:var(--danger) }
+  .duelead { position:absolute; top:8px; height:2px; pointer-events:none; opacity:.55;
+             background:repeating-linear-gradient(90deg, var(--good) 0 2px, transparent 2px 5px) }
+  .duelead.late { background:repeating-linear-gradient(90deg, var(--danger) 0 2px, transparent 2px 5px) }
+  .lane-head.fold { cursor:pointer }
+  .lane-head.fold:hover { color:var(--text) }
+  /* A ROW OF PARTS, not one string, and that is what decides who loses when the
+     column runs out. The chips are what someone deliberately switched ON to tell
+     two identical titles apart, and they are three characters wide; the title is
+     long and survives being cut. So the title flexes and ellipsizes and the chips
+     never shrink — "Install SQL Server for MOAuth… · prod" still identifies the
+     row, and "Install SQL Server for MOAuthorizer · p…" does not. */
+  .rowlabel { position:sticky; left:0; z-index:3; background:var(--bg);
+              display:flex; justify-content:flex-end; align-items:center; gap:6px;
+              height:26px; box-sizing:border-box;
+              width:var(--labw); padding-right:12px;
+              font-size:12px; line-height:26px; color:var(--text); cursor:pointer;
+              white-space:nowrap; overflow:hidden }
+  .rowlabel .rl-title { min-width:0; overflow:hidden; text-overflow:ellipsis }
+  /* THE ONLY THING A KEYBOARD HAS TO GO ON. Same two lines the mdview and the
+     legend toggles use, so the ring is one ring rather than three. `:focus-visible`
+     rather than `:focus`: clicking a row selects it, and a ring left behind by the
+     pointer reads as a second, staler selection next to the real one. */
+  .rowlabel:focus-visible, .bar:focus-visible { outline:2px solid var(--accent); outline-offset:2px }
+  .rowlabel .rl-chip { flex:0 0 auto; font-size:11px; opacity:.62 }
+  /* THE ONE THING IN THE GUTTER THAT IS NOT THE NAME. It sits last, so it lands
+     against the chart edge where the eye already is, and it never shrinks — an
+     ellipsized link icon is not a link icon. Dim until hovered, because most
+     rows do not have one and a column of bright arrows would read as a channel
+     nobody switched on. */
+  .rowlabel .rl-link { flex:0 0 auto; font-size:12px; line-height:1; opacity:.45;
+                       text-decoration:none; color:var(--text); padding:0 1px }
+  .rowlabel .rl-link:hover { opacity:1; color:#7fc4ff }
+  /* THE SEPARATOR IS DRAWN, NOT STORED. A "·" inside the chip's text would land in
+     textContent, in the tooltip and in the measurer, where it is not data — and
+     the first part would need a special case to not have one. A generated marker
+     on every part except the first is the same picture with none of that. */
+  .rowlabel > :not(:first-child)::before { content:"·"; opacity:.45; margin-right:6px }
+  /* The separator marks the boundary between PARTS OF THE NAME. The link is not
+     one of them — it is an action parked at the end — so it does not get one. */
+  .rowlabel > .rl-link::before { content:none }
+  .rowlabel.done .rl-title { text-decoration:line-through; text-decoration-thickness:1px }
+  /* SELECTION, IN THE ONE PLACE IT WAS MISSING. The bar had `.bar.sel` and the
+     graph node had `.sel`; the name — the thing you are looking at while you
+     read the panel, and often the only one of the three still on screen — had
+     nothing, so after clicking you lost which row you clicked.
+
+     NOT the bar's outline, for the reason the hover rule below gives: this
+     element is `width:var(--labw)`, so any box drawn on it is a highlight bar
+     down the whole gutter, and the gutter is a column of names that does not
+     need to shout over the chart. The accent lands on the TEXT instead.
+
+     COLOUR ALONE, and that is a decision rather than an oversight. This shipped
+     with a 3px accent tick beside the name as a second, non-colour channel;
+     Rascal Two looked at it and said the colour was enough, so the tick came back
+     out. What it cost is the reader who cannot see the accent — `aria-current`
+     in Grid.tsx is what is left for them, and it is the reason that attribute
+     is not optional here.
+
+     NO `font-weight`. The gutter's width is MEASURED off these labels, and
+     bolding the selected one would re-ellipsize it — the row would change
+     length as you clicked it. */
+  .rowlabel.sel { color:var(--accent) }
+  .rowlabel:hover .rl-title { text-decoration:underline dotted rgba(255,255,255,.45);
+                              text-underline-offset:3px }
+  /* The label selects the row, so it has to LOOK like it does. A cursor alone is
+     an affordance you only discover after arriving; the underline is visible from
+     across the row. Dotted and on the text rather than a background fill on the
+     cell, because the gutter is a column of names and a solid highlight bar down
+     it competes with the chart for attention it does not need. */
+  .rowlabel:hover { text-decoration:underline dotted rgba(255,255,255,.45);
+                    text-underline-offset:3px }
+  /* There was a `.rowlabel.infra` rule here that greyed out any task in the SRV
+     or DB lanes — hardcoded lane ids carried over from an earlier chart, and
+     never mentioned in the legend. It was a fourth visual channel nobody had
+     been told about, it meant nothing in any plan that does not happen to use
+     those two lane ids, and the first person to look closely asked what it
+     meant. Removed rather than made data-driven: the lane header already groups
+     these rows, so the greying was encoding something the layout says better. */
+  /* `move`, not `pointer`: the bar is draggable on both axes now — across for
+     "it cannot start before this date", up and down to reorder the team's queue
+     — and a hand cursor advertises only the click. */
+  /* THE BAR IS A TRANSPARENT HIT-BOX; `.shape` is the thing you see. They were
+     one element until shape became a channel, and they had to separate for one
+     reason: a pointed shape needs `clip-path`, and clip-path clips EVERYTHING in
+     the element — including the resize grip that deliberately overhangs the right
+     edge, the amber constraint tick that overhangs the left, and the selection
+     outline. All three would have silently vanished on a diamond.
+     So the clip lives one layer in. The grip, the tick and the selection halo are
+     siblings of `.shape`, outside the clip, and behave identically for every
+     shape — which is also why the halo stays a rectangle rather than tracing the
+     silhouette: a selection that changes shape with the data is a selection you
+     have to re-learn per row. */
+  .bar { position:absolute; height:18px; top:4px; cursor:move }
+  /* `overflow:hidden` so the colour bands are clipped to whatever silhouette the
+     shape is wearing — the band needs no corner logic of its own, and the second
+     colour on a diamond comes to the same point as the first. Safe here in a way
+     it never was on `.bar`: the grip and the tick are the bar's children, not
+     this one's. */
+  .shape { position:absolute; inset:0; overflow:hidden; border-radius:4px;
+           border:1px solid rgba(255,255,255,.25) }
+  /* An enumerated set, exactly like border styles and fill patterns. The first
+     four are pure `border-radius`, so they keep the rim intact around the curve;
+     the pointed three are `clip-path`, which cuts through the rim on the angled
+     edges — the border style still reads off the long top and bottom edges, which
+     is where you read a dash pattern anyway. 8px of point on each end still
+     leaves a flat middle on a three-day bar. */
+  .sh-soft    { border-radius:4px }
+  .sh-pill    { border-radius:999px }
+  .sh-oval    { border-radius:50% }
+  .sh-roundleft  { border-radius:999px 0 0 999px }
+  .sh-roundright { border-radius:0 999px 999px 0 }
+  .sh-slant     { border-radius:0; clip-path:polygon(7px 0, 100% 0, calc(100% - 7px) 100%, 0 100%) }
+  .sh-trapezoid { border-radius:0; clip-path:polygon(0 0, 100% 0, calc(100% - 7px) 100%, 7px 100%) }
+  .sh-chevron { border-radius:0;
+                clip-path:polygon(0 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 0 100%) }
+  .sh-chevronback { border-radius:0;
+                clip-path:polygon(8px 0, 100% 0, 100% 100%, 8px 100%, 0 50%) }
+  .sh-diamond { border-radius:0;
+                clip-path:polygon(8px 0, calc(100% - 8px) 0, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0 50%) }
+  .sh-notch   { border-radius:0;
+                clip-path:polygon(0 0, 100% 0, calc(100% - 8px) 50%, 100% 100%, 0 100%, 8px 50%) }
+
+  /* ---- the rim on a POINTED shape -----------------------------------------
+     A CSS border is painted on the box edges and then clipped, so on a chevron
+     the flat top and bottom rims stop dead where the diagonal starts and the
+     point itself has no rim at all — it reads as a detached triangle, which is
+     a rendering fault by any other name.
+
+     So a clipped shape paints its own rim: `.shape` becomes the rim (clipped to
+     the silhouette) and `.core` is the same silhouette inset by 2px carrying the
+     fill. The rim follows every edge, diagonals included.
+
+     THE STYLE SURVIVES AS A TEXTURE rather than as a stroke pattern, because CSS
+     cannot dash a diagonal. A 2px band of dot-tile reads as dotted on any edge;
+     a dash-tile reads as dashes along the flats and shortens on the angles. The
+     four values stay distinguishable, which is what the channel needs — exact
+     stroke fidelity on a 2px diagonal is not a thing a projector can resolve
+     anyway. Non-pointed shapes keep the real CSS border and are untouched. */
+  .core { position:absolute; inset:2px; overflow:hidden }
+  /* No rim means no gap: with `border:none` the fill has to reach the silhouette
+     edge, or a borderless pointed bar wears a 2px transparent moat. */
+  .rim-none { background:none }
+  .rim-none > .core { inset:0 }
+  .rim-solid, .rim-double { background:rgba(255,255,255,.92) }
+  .rim-dotted { background-color:rgba(255,255,255,.92);
+                background-image:radial-gradient(circle, transparent 0 .8px, #0d1117 .8px);
+                background-size:3px 3px }
+  .rim-dashed { background-color:rgba(255,255,255,.92);
+                background-image:repeating-linear-gradient(90deg,
+                  transparent 0 4px, #0d1117 4px 7px), repeating-linear-gradient(0deg,
+                  transparent 0 4px, #0d1117 4px 7px) }
+  /* A second (third, fourth) system on the same task. Inset by a hair on the
+     left so the boundary reads as a seam rather than two bars that happen to
+     touch — at projector distance an unmarked colour change looks like a gap in
+     the data. `pointer-events:none` so a band can never swallow the drag, the
+     click, or the hover-preview that the bar underneath owns.
+     The seam is a ::before rather than an inset box-shadow, because
+     `.pat-underline` IS a box-shadow — one rule would have silently replaced the
+     other, and which one won would depend on stylesheet order. */
+  .band { position:absolute; top:0; bottom:0; pointer-events:none }
+  .band::before { content:""; position:absolute; left:0; top:0; bottom:0; width:1px;
+                  background:rgba(0,0,0,.45) }
+
+  /* ---- the two extra encodings ---------------------------------------------
+     The budget was already spent: swimlane = team, hue = system, length =
+     duration, x = start. So environment and confidence had to go somewhere that
+     does not fight any of those.
+
+     ENVIRONMENT -> BORDER BRIGHTNESS. Ordinal on purpose (dev -> QA -> prod gets
+     more solid as it gets closer to production), and brightness is orthogonal to
+     hue, so it reads independently of which system a bar belongs to.
+
+     CONFIDENCE -> FILL HATCH, because a broken-up fill is the conventional read
+     for "not certain" and would be actively misleading used for anything else.
+     That is also why environment did NOT get the dashed border it might
+     otherwise deserve. A guess additionally carries a "?" — on a projector the
+     hatch difference alone is not enough, and "which of these numbers did you
+     make up" is the question the whole feature exists to answer. */
+  /* WIDTH *AND* LIGHTNESS, three clearly separated steps. The first cut varied
+     lightness alone at a fixed 1-2px and dev/QA/prod were near-indistinguishable
+     on a projector, which is a fair complaint.
+     Border COLOUR was considered and rejected: every hue on this page is already
+     load-bearing — blue is direct dependencies and selection, amber is the
+     transitive chain, green is today and what-this-unblocks, red is the deadline
+     and a missed date, and the three fills are the three systems. A fourth
+     categorical hue would collide with one of those wherever it landed, and it
+     would sit as a 2px rim *directly against* a fill hue, where adjacent colours
+     fuse rather than read separately. Width is the free channel, and it is
+     ordinal, which suits dev -> QA -> prod. */
+
+  /* ESTIMATE IS THE UNMARKED DEFAULT, deliberately. The first cut hatched
+     estimates too, and since almost nothing is "known" that made every bar on
+     the chart striped — a texture applied to everything discriminates nothing,
+     and it read as "the whole plan is invented" rather than pointing at the
+     rows that actually are. Only the guesses are marked now, so the hatch means
+     something the moment you look at it.
+     `known` gets a bright inner underline rather than a third texture: it is
+     legible across a room, and it cannot be confused with the env border
+     (outside the bar) or the guess hatch (across it). */
+  /* THREE FAMILIES, and the family is the point. A channel is only usable if its
+     values are separable at a glance, and values from the SAME family are the
+     ones that read as a ramp ("more hatched = less certain"). Mixing families in
+     one plan gives you separable-but-unordered values, which is what you want for
+     a nominal channel. Pick within a family for ordinal, across for nominal.
+
+       rule    where a bright line sits          underline overline midline
+       hatch   direction x density (a 2x2)       hatch hatchdense backslash backslashdense
+       texture non-directional                   cross vertical dots fade
+
+     Everything here is `background-image` or `box-shadow` and NOTHING is opacity:
+     opacity is the filter's, and a fill that dimmed a bar would be indistinguish-
+     able from a bar the legend had filtered out. That rules out the "hollow" and
+     "ghost" patterns that otherwise belong on this list — they are the single
+     most requested look and they cannot have it. */
+  /* THE RULES FLOAT, they are not flush. Flush against the edge, `underline` was
+     a border-bottom drawn two pixels in — indistinguishable from the border
+     channel's `bottom`, which is exactly the duplication that got `edges`
+     deleted. Held 3px clear of the rim they read as a mark ON the bar rather
+     than the edge OF it, and a bar can wear both at once and still be legible.
+     Gradients rather than inset box-shadows because a shadow cannot float. */
+  .pat-underline { background-image:linear-gradient(to bottom,
+      transparent 0 calc(100% - 7px), rgba(255,255,255,.85) calc(100% - 7px) calc(100% - 3px),
+      transparent calc(100% - 3px)) }
+  .pat-overline  { background-image:linear-gradient(to bottom,
+      transparent 0 3px, rgba(255,255,255,.85) 3px 7px, transparent 7px) }
+  .pat-midline   { background-image:linear-gradient(to bottom,
+      transparent 0 42%, rgba(255,255,255,.85) 42% 58%, transparent 58% 100%) }
+  .pat-hatch     { background-image:repeating-linear-gradient(45deg,
+      transparent 0 3px, rgba(0,0,0,.55) 3px 7px) }
+  .pat-hatchdense { background-image:repeating-linear-gradient(45deg,
+      transparent 0 2px, rgba(0,0,0,.6) 2px 4px) }
+  .pat-backslash { background-image:repeating-linear-gradient(-45deg,
+      transparent 0 3px, rgba(0,0,0,.55) 3px 7px) }
+  .pat-backslashdense { background-image:repeating-linear-gradient(-45deg,
+      transparent 0 2px, rgba(0,0,0,.6) 2px 4px) }
+  .pat-cross     { background-image:repeating-linear-gradient(45deg,
+      transparent 0 3px, rgba(0,0,0,.42) 3px 6px),
+      repeating-linear-gradient(-45deg, transparent 0 3px, rgba(0,0,0,.42) 3px 6px) }
+  .pat-vertical  { background-image:repeating-linear-gradient(90deg,
+      transparent 0 3px, rgba(0,0,0,.5) 3px 6px) }
+  .pat-dots      { background-image:radial-gradient(rgba(0,0,0,.55) 1.4px, transparent 1.5px);
+                   background-size:6px 6px }
+  /* Reads as "tapers off" — the only pattern here that is directional along the
+     bar's LENGTH, which makes it the one to reach for when a value means
+     something about the end of the work rather than the whole of it. */
+  .pat-fade      { background-image:linear-gradient(to right,
+      rgba(0,0,0,0) 30%, rgba(0,0,0,.6) 100%) }
+  /* OUTSIDE the bar, to its left. It used to sit inside, which worked until the
+     border ramp made the most recessive bars 11px tall — at which point the
+     glyph was taller than the bar it was marking and spilled out of it. Outside
+     and vertically centred, it is independent of bar height, and the space to a
+     bar's left is always free (one bar per row). Right is not available: that is
+     the drag grip. */
+
+  /* ---- legend -------------------------------------------------------------- */
+  #legend { display:flex; gap:9px; flex-wrap:wrap; align-items:stretch; margin-top:10px;
+            font-size:11px; color:var(--muted) }
+  #legend b { color:var(--text); font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+              font-weight:700; margin-right:2px }
+  /* EACH CHANNEL IS ITS OWN CARD. Five groups separated by nothing but whitespace
+     read as one long run of swatches, and "which of these is a border and which
+     is a fill" is the question the legend exists to stop you asking.
+
+     ONE TINT FOR ALL OF THEM. The first cut alternated two shades to separate
+     adjacent cards and it just looked like a rendering fault — the eye reads an
+     inconsistent background as a mistake long before it reads it as a grouping.
+     The card edge does the separating; the fill only has to say "this is a panel".
+
+     And the tint is a NEUTRAL, which is a constraint rather than a preference:
+     every hue on this page is load-bearing — blue is upstream and selection, green
+     downstream and today, red the deadline, amber a constraint, and the colour
+     channel owns whatever is left. A card tinted with a real hue would be a sixth
+     thing for a colour to mean. Resist "just make Border blue". */
+  #legend .grp { display:flex; gap:9px; align-items:center; flex-wrap:wrap;
+                 padding:6px 11px; border-radius:9px; border:1px solid var(--line);
+                 background:rgba(255,255,255,.05) }
+  #legend .it { display:inline-flex; gap:5px; align-items:center }
+  .k { display:inline-block; width:28px; height:16px; border-radius:3px; position:relative;
+       background-color:#5b6a7c; border:1px solid rgba(255,255,255,.25) }
+  /* THE STATUS SWATCHES WERE HERE AND ARE GONE (2026-09-20). Four rules drew an
+     empty / half / full / struck-through square for todo / doing / done /
+     cancelled, and the argument for them — status reads as filled-ness, not as a
+     hue, because every colour on this page already means something — picked a
+     good encoding without ever asking whether an encoding was wanted.
+     It was not. EVERY OTHER SWATCH IN THIS LEGEND IS A MINIATURE OF THE BAR,
+     drawn by the same functions the chart draws with, which is what stops the
+     key and the chart from disagreeing. Status paints no bar: a finished task
+     gets a struck-through LABEL and an elapsed strip, neither of which is a
+     filled square. So these four squares were the only visual encoding in the
+     app that existed nowhere except in the legend explaining it.
+     `status` passes `none` now, like `lanes` and `ready` — the other two
+     filter-only channels, which never had swatches and never needed them. */
+  .bar.sel { outline:2px solid var(--accent); outline-offset:1px }
+  /* "That one, there." Raised by hovering a dependency chip, and deliberately NOT
+     the selection colour — the point is to find a row while keeping the selected
+     one obviously selected, so the two must never be mistaken for each other.
+     A box-shadow ring rather than an outline so it can coexist with `.sel` on the
+     rare bar that is both. */
+  .bar.hot { box-shadow:0 0 0 2px #fff, 0 0 12px 2px rgba(255,255,255,.45) }
+  .chip[data-go] { cursor:pointer }
+  /* `opacity:1` matters: ghost chips ship at .62, so without it the chip you are
+     pointing at is the one that looks least active. */
+  .chip[data-go]:hover { border-color:#fff; color:var(--text); opacity:1 }
+  /* A CONSTRAINT YOU CANNOT SEE IS ONE YOU CANNOT ARGUE WITH in a meeting, which
+     is the failure mode this whole tool is built against — so a task carrying a
+     `notBefore` wears a tick at its left edge, where the constraint actually
+     bites. Outside the bar and taller than it, for the same reason the guess
+     glyph is: the border ramp makes the most recessive bars 11px tall, and
+     anything drawn inside one disappears at that height. Amber because it is a
+     property of the bar's START, and amber is already "something upstream is
+     holding this". */
+  .bar.pin::before { content:""; position:absolute; left:-5px; top:-3px; width:3px; height:24px;
+                     border-radius:2px; background:var(--warn) }
+  /* The grab strip is its own element rather than a CSS cursor zone on .bar:
+     a 6px hit target on a 18px bar is fiddly enough live that it gets its own
+     hoverable handle with a visible affordance. */
+  /* 8px wide, 3px of overhang. GRIP_ON_BAR in the script derives from exactly
+     these two numbers to decide when a bar is too short to carry a grip — change
+     one here and change it there, or short bars go back to being all handle. */
+  .grip { position:absolute; right:-3px; top:-2px; width:8px; height:22px; cursor:ew-resize;
+          border-radius:3px }
+  /* The chain's origin. A dashed ring rather than a fill: the bar's own colour is
+     the Application channel and painting over it would cost a reading to add one.
+     Outline, not border — it does not take part in layout, so a marked bar is
+     exactly as wide as an unmarked one and nothing shifts when you press the eye. */
+  .bar.eyed { outline:2px dashed var(--accent); outline-offset:2px }
+  .eyemark { position:absolute; inset:0; display:grid; place-items:center;
+             font-size:11px; line-height:1; pointer-events:none;
+             text-shadow:0 0 3px #000, 0 0 3px #000 }
+  .row.dim .bar.eyed { outline-color:var(--muted) }
+  .bar:hover .grip { background:var(--accent) }
+  /* ---- landing overlay ------------------------------------------------------
+     THE FRONT DOOR, and it is an overlay rather than a separate page for one
+     reason: a returning visitor with plans of their own should land in their
+     work, not on a poster. A separate landing page makes that a redirect
+     problem; an overlay makes it an if-statement. One page, one deploy, no
+     routing, and "always available" costs one button in the toolbar. */
+  /* ---- WHO ELSE IS HERE ---------------------------------------------------
+     Chips on the bar, cursors on the chart. Both are presence: ephemeral, never
+     sequenced, never persisted (see PRESENCE in sync-server/src/room.ts), so
+     nothing here is allowed to look like plan data. The chips are outlined
+     rather than filled and the cursors carry no shadowed panel, which keeps the
+     one saturated colour on screen the bars'. */
+  .who { display:flex; align-items:center; gap:4px }
+  .who[hidden] { display:none }
+  .whochip { display:inline-flex; align-items:center; gap:5px; max-width:150px;
+             padding:2px 9px 2px 3px; border-radius:999px; font-size:12px;
+             border:1px solid var(--line); background:#141a23; color:var(--text) }
+  .whochip i { width:15px; height:15px; border-radius:50%; flex:0 0 auto }
+  .whochip b { font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+  .whochip.me { cursor:pointer; border-style:dashed }
+  /* HIDDEN IS A STATE YOU CAN FORGET YOU ARE IN, so it is marked on the one chip
+     that is always on screen while you are in it. Faded rather than coloured:
+     every hue here is spoken for, and "less present" is the thing being said. */
+  .whochip.me.lurking { opacity:.5 }
+  .whochip.me.lurking i { background:none !important; border:1px dashed currentColor }
+  .whochip.me:hover { border-color:var(--accent) }
+  /* A CHILD OF #grid, so it shares the chart's coordinate space for free — and
+     `renderInner` removes nothing from #grid any more, so this layer survives
+     every rebuild instead of being torn down 60 times a second. */
+  #cursors { position:absolute; inset:0; pointer-events:none; z-index:6; overflow:hidden }
+  .pcur { position:absolute; will-change:transform }
+  .pcur svg { display:block; filter:drop-shadow(0 1px 2px rgba(0,0,0,.55)) }
+  .pcur b { position:absolute; left:12px; top:13px; font-size:11px; font-weight:600;
+            padding:1px 6px; border-radius:999px; white-space:nowrap; color:#08131f;
+            max-width:140px; overflow:hidden; text-overflow:ellipsis }
+  #landing { position:fixed; inset:0; z-index:80; display:flex; align-items:center;
+             justify-content:center; padding:24px;
+             background:rgba(8,11,16,.86); backdrop-filter:blur(3px) }
+  #landing[hidden] { display:none }
+  .land-card { max-width:760px; background:var(--panel); border:1px solid var(--line);
+               border-radius:14px; padding:26px 30px 24px; box-shadow:0 24px 70px rgba(0,0,0,.6) }
+  .land-card h1 { margin:0 0 6px; font-size:26px; letter-spacing:-.01em }
+  .land-card .sub { color:var(--muted); font-size:15px; line-height:1.5; margin:0 0 18px }
+  .land-card .sub b { color:var(--text); font-weight:600 }
+  .doors { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px }
+  .door { flex:1 1 300px; text-align:left; padding:14px 16px; border-radius:10px; cursor:pointer;
+          border:1px solid var(--line); background:#141a23; color:var(--text) }
+  .door:hover { border-color:var(--accent) }
+  .door b { display:block; font-size:15px; margin-bottom:3px }
+  .door span { color:var(--muted); font-size:13px; line-height:1.4 }
+  .land-foot { color:var(--muted); font-size:12.5px; line-height:1.5; border-top:1px solid var(--line);
+               padding-top:12px }
+  /* The home screen's own furniture. Same card, three more blocks: the New
+     action, the recents list, and the one paragraph about what a link is. */
+  .land-act { display:flex; gap:10px; align-items:center; margin:0 0 18px }
+  .land-new { padding:9px 16px; border-radius:9px; cursor:pointer; font-size:14px; font-weight:600;
+              border:1px solid var(--accent); background:var(--accent); color:#08131f }
+  .land-new:hover { filter:brightness(1.08) }
+  .land-h2 { font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--muted);
+             margin:0 0 8px; font-weight:700 }
+  .recents { list-style:none; margin:0 0 18px; padding:0; display:flex; flex-direction:column; gap:6px;
+             max-height:210px; overflow-y:auto }
+  .recent { display:flex; justify-content:space-between; align-items:center; gap:12px; width:100%;
+            text-align:left; padding:9px 12px; border-radius:9px; cursor:pointer;
+            border:1px solid var(--line); background:#141a23; color:var(--text); font:inherit }
+  .recent:hover { border-color:var(--accent) }
+  .recent b { font-weight:600; font-size:13.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+  .recent span { color:var(--muted); font-size:12px; white-space:nowrap }
+  /* The one thing a first-time visitor has to be told, so it is not styled like
+     a footnote. See ADR 0002 — this is the deal the whole tool makes. */
+  .land-key { border:1px solid var(--warn); border-radius:9px; padding:10px 12px;
+              margin:0 0 16px; font-size:13px; line-height:1.5; color:var(--text);
+              background:rgba(210,153,34,.09) }
+  .land-key b { color:var(--warn) }
+  /* The keys list. `kbd` is styled here and nowhere else, so it stays a key cap
+     rather than becoming a general inline-code style by accident. */
+  .land-keys { list-style:none; margin:0 0 14px; padding:0; display:grid; gap:6px;
+               font-size:12.5px; color:var(--muted) }
+  .land-keys li { display:flex; align-items:baseline; gap:8px }
+  .land-keys span { opacity:.6 }
+  .land-keys kbd { flex:0 0 auto; font:inherit; font-size:11px; line-height:1;
+                   padding:4px 7px; border:1px solid var(--line); border-radius:5px;
+                   background:rgba(255,255,255,.06); color:var(--fg) }
+  /* LEFT, not right: the viz kit puts its comment bubble in the bottom-right
+     corner, and two round buttons stacked on each other is one button nobody
+     can press. */
+  /* MOVED OUT OF THE BOTTOM-LEFT CORNER, which it shared with the inspector: the
+     panel reserved a 48px left gutter purely so its last row did not read through
+     a translucent ?. Beside the cog it is a toolbar button among toolbar buttons,
+     it collapses with the bar like everything else there, and the gutter it was
+     costing now carries the panel's own fold control. */
+  #help { width:30px; height:30px; border-radius:50%; padding:0 }
+  #help:hover { color:var(--text); border-color:var(--accent) }
+  #arrows { position:absolute; inset:0; pointer-events:none; overflow:visible }
+  /* The axis occupies real layout space at the top of #grid. See the note in
+     render() for why it is not negatively positioned above it. */
+  /* STICKY, so the dates and the NOW flag stay in view while the rows scroll under them. It is inside the
+     scrolling #chart, so `sticky` works; the background is opaque so rows do not show through, and the
+     z-index clears the gridlines, the arrow layer and the pinned gutter corner (3). */
+  #axis { height:56px; position:sticky; top:0; z-index:5; background:var(--bg) }
+  /* The corner of the pinned gutter. Rows and lane heads cover their own strip,
+     but the axis had nothing above them, so a shaded weekend slid visibly into
+     the label column the moment the chart was scrolled. Same height as #axis. */
+  .axgut { position:sticky; left:0; z-index:3; width:var(--labw); height:56px;
+           background:var(--bg); box-sizing:border-box;
+           display:flex; align-items:flex-end; justify-content:flex-end;
+           padding:0 12px 5px 0; font-size:12px; color:var(--muted);
+           white-space:nowrap; pointer-events:none }
+  .ax { position:absolute; white-space:nowrap; font-size:10px; letter-spacing:.06em;
+        text-transform:uppercase; color:var(--muted) }
+  .ax.mon { font-size:12px; letter-spacing:.02em; text-transform:none; color:var(--text); font-weight:600 }
+  .ax.flag { font-weight:700 }
+  .gl.mon { background:var(--muted); opacity:.45 }
+  /* THE MINOR RULE. Months stay the thing you navigate by, so the finer ladder
+     underneath has to be legible without competing with them — fainter line,
+     lighter label, no weight. */
+  .gl.sub { background:var(--muted); opacity:.16 }
+  .ax.sub { font-size:11px; color:var(--muted); font-weight:400; letter-spacing:.01em;
+            text-transform:none }
+  /* THREE TIERS, NOT TWO. Month, then the week it turns over on, then the rest.
+     A run of days with nothing marking the weeks is a wall of identical ticks —
+     the eye needs somewhere to count from, which is what this is. Sits between
+     the two in every dimension: brighter line than a plain day, fainter than a
+     month; readable text, but not the month's weight. */
+  .gl.wk  { background:var(--muted); opacity:.32 }
+  .ax.wk  { font-size:11px; color:var(--text); font-weight:500; letter-spacing:.01em;
+            text-transform:none }
+  /* Sprint boundaries get a line, but a dashed and quiet one: there are twice as
+     many of them as month lines and the chart is already carrying dependency
+     arrows, milestone rules and a today marker. Dashed distinguishes them from
+     the solid month rules without adding another colour. */
+  .gl.spr { background:none;
+            background-image:linear-gradient(to bottom, var(--muted) 0 5px, transparent 5px 11px);
+            background-size:1px 11px; opacity:.34 }
+  .gl { position:absolute; top:0; bottom:0; width:1px; background:var(--line) }
+  /* Non-working days. A bar is as long as the WORK in it, so a five-day task
+     that crosses a weekend draws seven days wide — and without this the extra
+     two days are an unexplained discrepancy on a chart whose entire argument is
+     that it does not have any. Faint on purpose: it is the reason a bar is the
+     length it is, not a thing to read. `pointer-events:none` so it can never
+     swallow a drag, the same rule the colour bands follow. */
+  .nwd { position:absolute; top:0; bottom:0; background:var(--muted); opacity:.07;
+         pointer-events:none }
+  /* The working calendar editor (ADR 0021): one row per weekday or date, its windows beside it. */
+  .wkrow { display:flex; align-items:center; gap:10px; margin-top:6px; flex-wrap:wrap }
+  .hday { width:34px; font-size:12px; font-weight:600 }
+  .hday.hdate { width:auto; white-space:nowrap; font-family:var(--mono, monospace); font-weight:400 }
+  .hwins { display:inline-flex; align-items:center; gap:10px; flex-wrap:wrap }
+  .hwin { display:inline-flex; align-items:center; gap:5px; padding:2px 4px 2px 6px;
+          border:1px solid var(--line); border-radius:4px }
+  .hoff { color:var(--muted) }
+  .hrm, .hadd { border:0; background:none; color:var(--muted); cursor:pointer; font-size:13px;
+                line-height:1; padding:2px 4px }
+  .hadd { font-size:12px }
+  .hadd:disabled { opacity:.4; cursor:default }
+  .gl.today    { background:var(--good); opacity:.7 }
+  .gl.deadline { background:var(--danger); width:2px }
+
+  /* ---- inspector ---------------------------------------------------------- */
+  /* ---- inspector: pinned to the bottom of the viewport ---------------------
+     It used to sit under the chart, which meant every "that'll take 3 weeks"
+     cost a scroll down to the controls and a scroll back up to see the bars
+     move — i.e. you could never watch the thing you just changed. Fixed instead,
+     so the controls are always one click away and the chart stays on screen.
+
+     `fixed` rather than `position:sticky`: as the last element in the flow,
+     sticky-bottom only pins while its own box is partly in view, which is
+     exactly when you do not need it. Being out of flow also means showing and
+     hiding it can no longer change the page height, which removes the layout
+     shift the old min-height was there to suppress. */
+  #insp { position:fixed; left:14px; right:14px; bottom:12px; z-index:50;
+          max-height:44vh; overflow-y:auto;
+          background:var(--panel); border:1px solid var(--line); border-radius:10px;
+          box-shadow:0 10px 34px rgba(0,0,0,.6) }
+  #insp[hidden] { display:none }
+
+  /* ---- the three sizes ------------------------------------------------------
+     `folded` is the existing rule below: head only. `full` gives the description
+     a column of its own and stacks everything else in a rail beside it — the
+     shape a GitHub issue uses, and the reason it works HERE without being a
+     modal is that #chart reserves `--insph` as a bottom margin, so a taller
+     panel shortens the chart instead of covering it. You never lose the view. */
+  /* THE CHART KEEPS A FLOOR. A naive 78vh let the panel grow to 655px and squeezed
+     the chart to 36 — one row — which throws away the exact property that made a
+     third size better than a modal. The middle term is the real rule: leave room
+     for the toolbar and a few rows of chart, whatever the window is. The clamp
+     ends stop it collapsing below the strip on a short window or eating the
+     screen on a tall one. */
+  #insp.full { max-height:clamp(280px, calc(100vh - 430px), 72vh) }
+  #insp.full .ibody {
+    display:grid; grid-template-columns:minmax(0,1fr) minmax(290px,330px);
+    /* THE FIRST ROW TAKES THE SLACK. The rail is usually the taller column, which
+       left the description sitting short with dead space under it. Making row one
+       flexible hands that space to the description, where it is the thing you
+       actually wanted more of. */
+    grid-template-rows:minmax(24vh, 1fr);
+    gap:0 22px; align-items:stretch }
+  /* THE DEPENDENCY ROWS BELONG UNDER THE DESCRIPTION, not in the rail. They were
+     landing in column 2 because the old rule swept every non-description child
+     there, which made a twelve-field rail taller than the panel and gave the
+     right-hand side its own scrollbar — while the left column sat half empty.
+     They are prose about this task, like the description is. */
+  #insp.full .ibody > .idesc,
+  #insp.full .ibody > .deps { grid-column:1 }
+  /* The rail spans every row of the left column rather than being one cell of
+     it, so the fields stay together at the top whatever is written below. */
+  #insp.full .ibody > .ifields { grid-column:2; grid-row:1 / -1 }
+  /* SHORTER NOW THAT IT SHARES THE COLUMN with the dependency rows. It still
+     grows to its content where `field-sizing` is supported; this is the floor. */
+  #insp.full .ibody > .idesc { display:flex }
+  #insp.full .idesc textarea { flex:1; min-height:24vh; max-height:none }
+
+  /* ---- the field rail ------------------------------------------------------
+     TWO COLUMNS, ONE RULE. Every field is a `.frow` of exactly two cells, so the
+     rail can be a grid and each row borrows the grid's columns with `subgrid` —
+     which is what makes every key end at the same x and every control start at
+     the same x. Before this each field carried its own inline font, colour and
+     6px margin inside a flex-wrap toolbar, so no two rows agreed on anything.
+
+     `align-items:center`, not baseline: half of these are native date pickers
+     whose text sits at a different height from a bare label's, which is exactly
+     the "Project is a couple of pixels higher than the others" effect. */
+  .frow { display:inline-flex; align-items:center; gap:6px;
+          font-size:13px; color:var(--muted) }
+  .frow .fk { white-space:nowrap }
+  /* A MINIATURE OF THE BAR. `.shape` is `position:absolute; inset:0`, so it needs a
+     sized relative box to sit in — this is that box and nothing else. */
+  .tswatch { position:relative; width:17px; height:17px; flex:0 0 auto; border-radius:4px }
+  .frow .fv { display:flex; align-items:center; gap:6px; min-width:0 }
+  #insp.full .ifields { display:grid; grid-template-columns:max-content minmax(0,1fr);
+                        column-gap:12px; row-gap:7px; align-items:center;
+                        align-content:start }
+  #insp.full .fgroup { display:contents }
+  #insp.full .fgroup > .frow { display:grid; grid-template-columns:subgrid;
+                                grid-column:1 / -1; align-items:center }
+  /* LEFT, like every settings sidebar worth copying. Right-aligning the key
+     makes its own left edge ragged, which is the thing that reads as untidy even
+     once the values line up — the eye follows the start of the words, not their
+     end. The column is `max-content`, so the values still all begin at one x. */
+  #insp.full .fgroup > .frow > .fk { text-align:left }
+  /* ONE WIDTH FOR THE FOUR DATE FIELDS. Left to their intrinsic size, "Not before"
+     and "Due" came out 211px and "Started"/"Finished" 195px — a 16px stagger down
+     a column whose whole job is to line up. `min()` so a narrow rail shrinks them
+     rather than overflowing. */
+  /* CONTROLS FILL THEIR COLUMN, and the clear button gets a reserved slot whether
+     or not it is there. Measured on a maximum-content plan, the rail itself was
+     the right width — the widest row ended 13px from its edge — but a short
+     control left up to 175px of slack beside it, and a column of ragged right
+     edges reads as wasted space even when nothing is wasted.
+
+     A grid rather than a flex row, so the × occupies a fixed 22px on EVERY row.
+     Letting it shrink only the rows that have one just moves the ragged edge. */
+  #insp .fgroup > .frow > .fv {
+    display:grid; grid-template-columns:minmax(0,1fr) 22px; gap:6px; align-items:center }
+  /* A THIRD COLUMN ONLY ON THE ROWS THAT HAVE ONE. `:has()` rather than a class
+     threaded through `row()`: the four date rows are the only ones with a `now`
+     button, and giving every row the column would narrow the selects for a
+     control they will never show. `auto`, so the button is its own width and the
+     × stays in the same 22px slot it occupies on every other row. */
+  #insp .fgroup > .frow > .fv:has(.fnow) {
+    grid-template-columns:minmax(0,1fr) auto 22px }
+  /* Smaller than a primary control, because it is a shortcut for one. */
+  .fnow { padding:5px 8px; font-size:12px; color:var(--muted) }
+  /* ONE SIZE WHETHER OR NOT THERE IS ANYTHING TO CLEAR — the empty slot is a
+     span of the same width, so setting a date moves nothing beside it. */
+  .fclear { flex:0 0 22px; width:22px; padding:5px 0; box-sizing:border-box }
+  /* A DURATION IS "1h30m", not a sentence. Filling the rail's column made it the
+     widest control on the panel for the shortest value. */
+  #insp .fgroup > .frow > .fv > #dur { width:8em }
+  #insp .fgroup > .frow > .fv > select,
+  #insp .fgroup > .frow > .fv > input,
+  /* `.pickbtn` carries a 190px max-width and a left margin for its inline use in
+     the strip; in the rail it is a column-filling control like every other. */
+  #insp .fgroup > .frow > .fv > .pickbtn {
+    width:100%; min-width:0; max-width:none; margin-left:0 }
+  /* The modes and the read-only line are not key/value pairs, so they span. */
+  #insp.full .ifields > .finfo { grid-column:1 / -1 }
+
+  /* THE STRIP: EQUAL CELLS, LABEL ABOVE. One grid of same-width cells, so every
+     column lines up down the panel. What decides where a field sits is the
+     window's width — never what this task happens to contain. Labels go above
+     rather than beside so a date cell (picker, now, ×) is narrow enough that
+     three or four fit across a laptop screen. */
+  #insp:not(.full) .fgroup { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
+                             gap:8px 18px; align-items:start }
+  #insp:not(.full) .fgroup > .frow { display:flex; flex-direction:column; align-items:stretch; gap:3px; min-width:0 }
+  #insp:not(.full) .fgroup > .frow > .fk { font-size:11px }
+  /* ONE CONTROL HEIGHT. A select, a date picker and the project button each
+     brought their own, so the baseline of a row of cells wandered by 8px. */
+  #insp .fgroup > .frow > .fv > :is(input:not([type=checkbox]), select, .pickbtn, button) {
+    height:32px; box-sizing:border-box }
+
+  /* WHAT THE SCHEDULER SAYS, kept off the rows where you tell it things. A
+     computed date sitting inline among editors reads as another editor. */
+  .finfo { display:flex; flex-wrap:wrap; gap:4px 14px; font-size:13px; color:var(--muted);
+           border-top:1px solid var(--line); margin-top:4px; padding-top:9px }
+  .finfo b { color:var(--text); font-weight:600 }
+
+  /* IT IS A BUTTON, SO IT LOOKS LIKE ONE. The arrow and muted text read as a
+     hyperlink, which promises navigation; it starts a mode instead.
+
+     --bg, NOT --panel, for the same reason the fold button needed it: the global
+     button rule paints controls in the panel's own colour, which on the panel
+     itself leaves only a hairline border. An action that reads as text is the
+     thing being complained about.
+
+     BY ROW, NOT BY ID. This was `#mklink` alone, so the fix covered the one
+     button somebody complained about and left Cancel and the linking mode's own
+     way out still reading as text — and the moment a second link button was
+     added it came in unstyled beside a styled twin, which is what made it
+     obvious. Every action in these two rows is the same kind of thing and gets
+     the same treatment; a new one inherits it instead of waiting to be noticed. */
+  .linkmsg button { font-size:12px; background:var(--bg) }
+  /* The mode's own way out, beside the sentence that explains the mode. */
+  .linkmsg { display:flex; align-items:center; gap:12px; flex-wrap:wrap }
+
+  /* The description. `resize:vertical` because any default is a guess, and
+     `field-sizing:content` grows it to fit where the browser supports it —
+     progressive, so a browser without it just keeps the two-row floor. */
+  .idesc { margin-top:8px }
+  .idesc textarea {
+    width:100%; box-sizing:border-box; min-height:46px; resize:vertical;
+    field-sizing:content; max-height:34vh;
+    font:inherit; line-height:1.45; padding:7px 9px;
+    background:var(--bg); color:var(--text);
+    border:1px solid var(--line); border-radius:6px }
+  .idesc textarea:focus { outline:none; border-color:var(--accent) }
+
+  /* THE RENDERED HALF. Same box as the textarea it replaces — same padding, same
+     radius, same minimum height — so switching modes moves nothing on screen.
+     The border is transparent rather than absent for the same reason: a visible
+     one would make it look like an input, an absent one would reflow by a pixel. */
+  .mdview { border:1px solid transparent; border-radius:6px; padding:7px 9px;
+            min-height:46px; font-size:13px; line-height:1.45; color:var(--text);
+            cursor:text; overflow-wrap:anywhere }
+  /* IT HAS TO LOOK EDITABLE. A region that silently responds to a click is the
+     same discoverability problem as a keybind nobody told you about. */
+  .mdview:hover { border-color:var(--line); background:rgba(255,255,255,.03) }
+  .mdview:focus-visible { outline:2px solid var(--accent); outline-offset:1px }
+  .mdview p:first-child { margin-top:0 }
+  .mdview p:last-child { margin-bottom:0 }
+  .mdview p { margin:0 0 8px }
+  .mdview ul { margin:0 0 8px; padding-left:20px }
+  .mdview code { background:var(--bg); border:1px solid var(--line); border-radius:4px;
+                 padding:1px 5px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+                 font-size:12px }
+  .mdview a { color:var(--accent) }
+
+  /* ---- everything else GFM can now emit ------------------------------------
+     `marked` produces the full CommonMark/GFM element set, so the panel has to
+     have an opinion about all of it or a pasted table lands as unstyled browser
+     default in a dark panel — the same white-box trap the date inputs fell into. */
+  .mdview h1, .mdview h2, .mdview h3,
+  .mdview h4, .mdview h5, .mdview h6 {
+    margin:14px 0 6px; font-weight:600; line-height:1.25; color:var(--text) }
+  .mdview h1:first-child, .mdview h2:first-child, .mdview h3:first-child { margin-top:0 }
+  .mdview h1 { font-size:18px } .mdview h2 { font-size:16px } .mdview h3 { font-size:14.5px }
+  .mdview h4, .mdview h5, .mdview h6 { font-size:13px }
+  /* A FENCED BLOCK KEEPS ITS OWN SCROLLBAR. A long line of code must not widen
+     the panel — the rail's width is load-bearing for every other row. */
+  .mdview pre { background:var(--bg); border:1px solid var(--line); border-radius:6px;
+                padding:9px 11px; overflow-x:auto; margin:0 0 8px }
+  /* The inline-code chrome would double up inside a block. */
+  .mdview pre code { background:none; border:0; padding:0; font-size:12px; line-height:1.5 }
+  .mdview ol { margin:0 0 8px; padding-left:22px }
+  .mdview li { margin:2px 0 }
+  .mdview li > input[type=checkbox] { margin-right:6px }
+  .mdview blockquote { margin:0 0 8px; padding:2px 0 2px 11px;
+                       border-left:3px solid var(--line); color:var(--muted) }
+  .mdview table { border-collapse:collapse; margin:0 0 8px; font-size:12.5px; display:block;
+                  overflow-x:auto; max-width:100% }
+  .mdview th, .mdview td { border:1px solid var(--line); padding:4px 9px; text-align:left }
+  .mdview th { background:var(--bg); font-weight:600; color:var(--text) }
+  .mdview hr { border:0; border-top:1px solid var(--line); margin:12px 0 }
+  /* Contained, because a description is shared and an image is somebody else's
+     server deciding how much of this panel to take. */
+  .mdview img { max-width:100%; height:auto; border-radius:6px; display:block; margin:4px 0 }
+  .mdview del { color:var(--muted) }
+  #insp.full .mdview { min-height:24vh }
+  /* Reserved space for the pinned panel is set from its MEASURED height by
+     padForPanel(), not hardcoded here: the panel grows with its content (the
+     dependency rows on a task with many predecessors are tall) up to 44vh, and a
+     fixed reservation of 210px left up to ~140px of rows sitting under it with
+     no way to scroll them clear. That bit exactly where you would expect — the
+     last lane, QA, which is the one you have to click through one row at a time.
+     This value is a fallback for first paint only. */
+  /* HEIGHT OVERRIDE, and it is what makes the reservation work at all.
+     viz-kit.css sets `body { height:100% }` — one viewport — and with
+     border-box sizing a padding-bottom then eats into the content box instead of
+     extending the page, so the reserved space silently did nothing and the last
+     lane stayed pinned under the panel. html still paints the canvas, so letting
+     body grow costs nothing visually. */
+  /* SUPERSEDED, and deliberately inverted. This used to read
+     `height:auto; min-height:100%; padding-bottom:210px` — letting the body grow
+     so a padding reservation could push the last lane clear of the fixed
+     inspector, because with border-box sizing padding on a height:100% body eats
+     the content box instead of extending the page.
+
+     None of that is needed now that #chart is the scroller: the rows clear the
+     panel via #chart's `--insph` bottom margin, and the body must be exactly one
+     viewport tall for the flex column to bound the chart at all. `overflow:hidden`
+     because the window scrolling is the thing being removed — if it can scroll,
+     the chart's scrollbar goes back under the fold. */
+  body { height:100%; overflow:hidden; padding-bottom:0 }
+
+  /* The panel reserves a right-hand gutter so the dismiss × has a column of its
+     own; without it × sat directly against Delete, which is a bad pair of
+     buttons to put a thumb between. And a LEFT gutter for the same reason: `#help`
+     is fixed at the bottom-left above this panel, so the panel's last row — the
+     downstream chips — was reading through a translucent ? button. */
+  #insp { padding-right:62px !important; padding-left:48px !important }
+  /* FOLDED KEEPS THE HEADER ROW, the same bargain #top.collapsed makes with
+     #mini: losing the name of the thing you have selected would mean unfolding it
+     every time you wanted to know what you were looking at. The row it keeps is
+     also the row with the actions on it, so folded is still useful rather than
+     merely small. */
+  /* 14px, not 12. At 12 the three-size cycle's last glyph — ▪, which means "fold
+     all the way down" — rendered as a speck you could not tell from a smudge. The
+     other two are arrowheads and survived the smaller size; the set has to be
+     legible as a set. Fixed width so the button does not resize as it cycles. */
+  /* BOTTOM LEFT, AND `fixed`, WHICH IS THE WHOLE POINT. The panel is anchored
+     `bottom:12px`, so its bottom edge is the one part of it that never moves —
+     only the top does as it grows. A button at the top therefore RAN AWAY between
+     every click of a three-step cycle, which is exactly what it should not do.
+     Pinned to the viewport instead of absolutely placed, so panel scrolling
+     cannot carry it off either (an abspos child of a scrolling box scrolls with
+     the content). 23/20 puts it inside the 48px left gutter the panel already
+     reserves, so it never sits on top of anything at any size. */
+  #inspfold { position:fixed; left:23px; bottom:20px; border:1px solid var(--line);
+              /* --bg, NOT --panel. It sits ON the panel, so painting it the panel's
+                 own colour left a muted glyph floating in the corner with no edge —
+                 a control you had to already know was there. Inset and full-contrast
+                 now, which is what every other button in this file does. */
+              background:var(--bg); color:var(--text); cursor:pointer; font-size:14px;
+              line-height:1; padding:4px 0; width:30px; text-align:center;
+              border-radius:6px; z-index:1 }
+  #inspfold:hover { color:var(--text); border-color:var(--accent) }
+  #insp.folded > *:not(.ifold):not(.ihead) { display:none }
+  /* FOLDED IS FOR IDENTIFYING AND ORDERING, nothing else: the name, the chain eye,
+     up/down, delete. The link popover is a thing you open once and then only ever
+     follow, and Duplicate already has ⌘D — neither earns a slot in the smallest
+     view of a panel whose whole point at this size is to get out of the way. */
+  #insp.folded .popwrap, #insp.folded #dup { display:none }
+  #insp.folded { max-height:none; overflow:visible }
+  #dismiss { position:absolute; top:8px; right:9px; border:0; background:none;
+             color:var(--muted); font-size:19px; line-height:1; padding:3px 7px; cursor:pointer;
+             border-radius:6px }
+  #dismiss:hover { color:var(--text); background:rgba(255,255,255,.07) }
+  /* and a hard gap on the delete button itself, so the two never read as a pair */
+  #del { margin-left:22px }
+  /* Delete is the only destructive control in the panel; give it a visual
+     identity so it is not just another grey button beside the dismiss ×. */
+  #del:hover { border-color:var(--danger); color:var(--danger) }
+  #insp .hint { color:var(--muted); font-size:13px }
+  .chip { display:inline-flex; align-items:center; gap:6px; background:var(--panel);
+          border:1px solid var(--line); border-radius:999px; padding:3px 6px 3px 10px;
+          font-size:12px; margin:3px 4px 0 0 }
+  /* The slack reading rides INSIDE the chip rather than in a column beside it:
+     the answer to "which of these is holding me" has to be on the thing itself,
+     or you are matching two lists by eye while someone is talking. */
+  .chip i { font-style:normal; font-size:10px; opacity:.62; margin-left:5px;
+            font-variant-numeric:tabular-nums }
+  .chip.pin { border-color:var(--warn); color:var(--text) }
+  .chip.pin i { opacity:1; color:var(--warn); font-weight:700 }
+  .chip.ghost i { opacity:.85 }
+  .chip button { border:0; background:none; color:var(--danger); padding:0 4px; font-size:15px;
+                 line-height:1; border-radius:4px }
+  /* ONE GRID FOR EVERY RELATIONSHIP ROW, so the labels share a column and the
+     chips all start at one x; the link button that fills a row sits at its end. */
+  .deps { display:grid; grid-template-columns:minmax(0,170px) minmax(0,1fr) auto; gap:8px 14px;
+          align-items:center; margin-top:12px; padding-top:10px; border-top:1px solid var(--line) }
+  .deprow { display:grid; grid-column:1 / -1; grid-template-columns:subgrid; align-items:center; min-height:26px }
+  .dchips { display:flex; flex-wrap:wrap; align-items:center; gap:2px; min-width:0 }
+  .deprow > button { grid-column:3; font-size:12px; background:var(--bg) }
+  .deps .dk { white-space:normal; line-height:1.3; margin-right:0 }
+  .heldk { color:var(--warn) }
+  .dk { font-size:11px; letter-spacing:.05em; text-transform:uppercase; font-weight:700;
+        margin-right:8px; white-space:nowrap }
+  /* Transitive and downstream chips are not removable — they are consequences of
+     the direct edges, so offering an × would imply an edit that does not exist. */
+  .chip.ghost { opacity:.62; padding-right:10px }
+  #legend .it { border:1px solid transparent; background:none; color:inherit; font:inherit;
+                cursor:pointer; padding:2px 6px; border-radius:5px }
+  #legend .it:hover { background:rgba(255,255,255,.07) }
+  #legend .it.on { border-color:var(--accent); background:rgba(122,180,255,.14); color:var(--text) }
+  /* Nothing in view under the other filters: still a control (ticking it widens), just quiet. */
+  #legend .it.zero:not(.on) { opacity:.45 }
+  /* THE SAME CHIP AS THE VALUES BESIDE THEM. These two sit inside #legend among
+     `.it` chips that light up when they are on, and they were a raw
+     `<input type=checkbox>` — which the theme rule at the top of this file does
+     not cover (it enumerates `input[type=number], input[type=text]`), so they
+     fell through to the browser default and landed a light square in a dark bar.
+     Exactly the failure the `type=search` note by the Find box describes.
+     They are modes, not values, so they read as switches rather than as swatched
+     chips — but the lit border and tint are the legend's, because "this one is
+     on" has to look the same everywhere in this bar or it means nothing. */
+  .fmode { font-size:11px; color:var(--muted); display:inline-flex; align-items:center; gap:6px;
+           cursor:pointer; user-select:none; padding:2px 8px 2px 6px; border-radius:5px;
+           border:1px solid transparent }
+  .fmode:hover { color:var(--text); background:rgba(255,255,255,.07) }
+  /* `:has`, so the whole chip lights from the input's own state and there is no
+     class for a render to keep in sync with the checkbox it is describing. */
+  .fmode:has(:checked) { border-color:var(--accent); background:rgba(122,180,255,.14);
+                         color:var(--text) }
+  .fmode input, .fswitch input { appearance:none; -webkit-appearance:none; margin:0; cursor:pointer;
+                 flex:0 0 auto; width:22px; height:12px; border-radius:999px; position:relative;
+                 border:1px solid var(--line); background:rgba(255,255,255,.06);
+                 transition:background .12s, border-color .12s }
+  .fmode input::after, .fswitch input::after { content:""; position:absolute; top:1px; left:1px; width:8px; height:8px;
+                        border-radius:50%; background:var(--muted);
+                        transition:transform .12s, background .12s }
+  .fmode input:checked, .fswitch input:checked { border-color:var(--accent); background:rgba(122,180,255,.28) }
+  .fmode input:checked::after, .fswitch input:checked::after { transform:translateX(10px); background:var(--accent) }
+  /* The switch on its own, for a value cell whose key is already beside it. */
+  .fswitch { display:inline-flex; align-items:center; cursor:pointer }
+  /* IN A FIELD CELL IT IS A CONTROL LIKE ITS NEIGHBOURS: their height, their box,
+     and lit like a filter chip when on. */
+  #insp .fgroup .fswitch { height:32px; box-sizing:border-box; gap:8px; padding:0 10px;
+                           border:1px solid var(--line); border-radius:6px; background:var(--bg);
+                           font-size:13px; color:var(--muted) }
+  #insp .fgroup .fswitch:has(:checked) { border-color:var(--accent); background:rgba(122,180,255,.14);
+                                         color:var(--text) }
+  /* `appearance:none` takes the focus ring with it, and these are still the only
+     way to reach either mode from a keyboard. */
+  .fmode input:focus-visible { outline:2px solid var(--accent); outline-offset:2px }
+  /* Sits where the rows would have been, so an empty result reads as an answer
+     rather than as the chart having failed to draw. */
+  .nomatch { padding:26px 0 26px 12px; color:var(--muted); font-size:13px; max-width:720px;
+             line-height:1.5 }
+  #clearfilter { font-size:11px; padding:3px 9px; border:1px solid var(--accent);
+                 background:none; color:var(--accent); border-radius:999px; cursor:pointer }
+  /* Dimmed, never removed — the rows hold their place so nothing reflows under
+     the pointer, and the chart keeps showing the real schedule. */
+  .row.dim { opacity:.11 }
+  .row { transition:opacity .12s ease }
+  #arrows.dim { opacity:.13 }
+  /* ---- the channel table --------------------------------------------------
+     Four columns, identical in every channel, so the eye runs down a column even
+     where one channel's style control is a colour swatch and the next one's is a
+     dropdown. The style column is FIXED WIDTH for exactly that reason: letting it
+     size to content is what made the old layout look like unrelated widgets. */
+  .chrow { margin-top:16px }
+  .chrow:first-child { margin-top:4px }
+  .chhead { display:flex; align-items:center; gap:9px; margin-bottom:5px }
+  .chname { font-size:13px; font-weight:700; color:var(--text); background:none;
+            border:0; border-bottom:1px solid transparent; padding:2px 0; width:150px }
+  .chname:hover { border-bottom-color:var(--line) }
+  .chname:focus { outline:none; border-bottom-color:var(--accent) }
+  .chwhat { font-size:11px; color:var(--muted); flex:1 1 auto }
+  .chgrid { display:flex; flex-direction:column; gap:3px }
+  .chit { display:grid; grid-template-columns:1fr 168px 34px 74px; align-items:center;
+          gap:10px; background:rgba(255,255,255,.04); border:1px solid var(--line);
+          border-radius:7px; padding:3px 8px; min-height:28px }
+  .chit.chhdr { background:none; border-color:transparent; padding-top:0; padding-bottom:0;
+                min-height:0; font-size:9.5px; letter-spacing:.08em; text-transform:uppercase;
+                color:var(--muted) }
+  .chit.chhdr span:nth-child(3) { text-align:center }
+  .chit.chempty { display:block; color:var(--muted); font-size:12px; font-style:italic }
+  .chit input.cl { border:0; background:none; padding:2px 0; font:inherit; font-size:12.5px;
+                   color:var(--text); min-width:0 }
+  .chit input.cl:focus { outline:none; border-bottom:1px solid var(--accent) }
+  .cst { display:flex; align-items:center; gap:6px; min-width:0 }
+  .cst select { flex:1 1 auto; min-width:0; padding:2px 4px; font-size:11px }
+  .cst input[type=color] { width:26px; height:20px; padding:0; border:0; background:none }
+  .cst .k { width:26px; height:14px; flex:0 0 auto }
+  .chit .cap { display:inline-flex; align-items:center; gap:5px; color:var(--muted); font-size:11px }
+  .chit .cap input { width:46px; padding:2px 4px; font-size:12px }
+  .chit .use { font-size:11px; color:var(--muted); text-align:center;
+               font-variant-numeric:tabular-nums }
+  .chit .btns { display:inline-flex; justify-content:flex-end }
+  .chit .btns button { border:0; background:none; color:var(--muted); cursor:pointer;
+                       font-size:13px; line-height:1; padding:3px 6px; border-radius:5px }
+  .chit .btns button:hover:not(:disabled) { color:var(--text); background:rgba(255,255,255,.08) }
+  .chit .btns button:disabled { opacity:.25; cursor:default }
+  .chit .btns .rm:hover { color:var(--danger) }
+  .addch { font-size:11px; padding:3px 9px }
+  /* ---- settings tabs ------------------------------------------------------ */
+  .settabs { display:flex; gap:4px; margin:14px 0 14px; border-bottom:1px solid var(--line) }
+  .settabs button { border:0; background:none; color:var(--muted); cursor:pointer;
+                    font-size:12.5px; padding:7px 13px; border-radius:8px 8px 0 0;
+                    border-bottom:2px solid transparent; margin-bottom:-1px }
+  .settabs button:hover { color:var(--text); background:rgba(255,255,255,.05) }
+  .settabs button.on { color:var(--text); border-bottom-color:var(--accent); font-weight:600 }
+  .setsec[data-panel] { border-top:0; padding-top:0; margin-top:0 }
+  .setsec[hidden] { display:none }
+  /* Two overlays, one set of rules. #reorder is the queue-order review and it is
+     the same shape as the swatch wall — a scrim, one card, a close button —
+     so it shares the selectors rather than restating them six lines later. */
+  #wall, #reorder { position:fixed; inset:0; z-index:95; display:flex; align-items:flex-start;
+          justify-content:center; background:rgba(6,10,16,.74); padding:26px 20px }
+  #wall[hidden], #reorder[hidden] { display:none }
+  #wall-close, #reorder-close { position:absolute; top:10px; right:12px; border:0; background:none;
+                color:var(--muted); font-size:21px; line-height:1; cursor:pointer; padding:2px 7px }
+  #wall-close:hover, #reorder-close:hover { color:var(--text) }
+  #reorder .set-card { width:min(760px,96vw) }
+  #reorder .set-card:has(#rank-body:not([hidden])) { width:min(1180px,96vw) }
+  .otabs { display:flex; gap:6px; margin:0 0 12px }
+  .otabs button { font-size:13px; color:var(--muted); background:transparent }
+  .otabs button[aria-selected=true] { color:var(--text); border-color:var(--accent) }
+  .obadge { display:inline-block; min-width:16px; padding:0 6px; border-radius:999px; font-size:11px;
+            font-weight:700; background:var(--warn, #d29922); color:#1a1300 }
+  /* Amber counts past plans to answer, blue the tasks not ranked yet: two questions, told apart at a glance. */
+  .obadge.rk { background:var(--accent); color:#fff }
+  .past-task { margin:0 0 10px; display:flex; gap:10px; align-items:baseline; flex-wrap:wrap }
+  .past-when, .past-kind { color:var(--muted); font-size:12px }
+  .past-answer { display:inline-flex; gap:6px; align-items:center; flex-wrap:wrap }
+  .past-answer .q { font-weight:600 }
+  /* In the Inspector: its own line under the time. */
+  .fv:has(> .past-answer) { flex-wrap:wrap }
+  .fv > .past-answer { flex-basis:100%; grid-column:1 / -1 }
+  .past-answer button.default { border-color:var(--accent); color:var(--text) }
+  /* THE RANK TAB — the library's own elements, re-themed with this page's tokens. */
+  #rank-body { --pw-bg:var(--bg); --pw-panel:var(--panel); --pw-text:var(--text); --pw-muted:var(--muted);
+               --pw-border:var(--line); --pw-accent:var(--accent) }
+  /* The box to suggest an order from the page. */
+  #rank-body .rk-suggest { margin:0 0 12px; padding:6px 10px; border:1px dashed var(--line); border-radius:8px }
+  #rank-body .rk-steer { display:block; margin:0 0 12px; font-size:13px; color:var(--muted) }
+  #rank-body .rk-steer[hidden] { display:none }
+  #rank-body .rk-suggest textarea { display:block; width:100%; box-sizing:border-box; margin:6px 0 }
+  #rank-body .rk-grid { display:grid; grid-template-columns:minmax(0,1.6fr) minmax(0,1fr); gap:14px; align-items:start }
+  #rank-body .rk-side h3 { font-size:12px; color:var(--muted); font-weight:500; margin:0 0 6px }
+  #rank-body .rk-side details { margin-top:12px }
+  /* Benching has no meaning here: finished work leaves the ranking by itself. */
+  #rank-body pairwise-compare::part(bench), #rank-body pairwise-ranking::part(bench) { display:none }
+  /* "You can stop here — see the list": the list is already beside it. */
+  #rank-body pairwise-progress::part(stop) { display:none }
+  #rank-body pairwise-compare::part(card) { padding:40px 14px 14px; align-items:stretch; text-align:left }
+  /* One row per suggestion: what moves, what it buys, and the button. The gain
+     column is fixed-width so the numbers line up down the list — the whole point
+     of the panel is comparing them. */
+  .rsug { display:grid; grid-template-columns:1fr 96px 92px; gap:10px; align-items:center;
+          padding:8px 2px; border-top:1px solid var(--line) }
+  .rsug .what { font-size:13px; color:var(--text) }
+  .rsug .why  { font-size:11px; color:var(--muted); margin-top:1px }
+  .rsug .gain { font-size:13px; font-weight:700; color:var(--good); text-align:right }
+  .rsug .gain.trade { color:var(--warn) }
+  /* The nudge chip lives in #msbar with the milestones, so it is a .ms and
+     inherits the card. Only the accent border and the button are new. */
+  .ms.reord { border-left-color:var(--accent); cursor:pointer }
+  .ms.reord .vd { color:var(--accent) }
+  /* OUT OF DATE IS NOT AN ALARM. The advice is not wrong, it is answering an
+     older question — so this reads as muted rather than as a warning, and the
+     colour that means "here is something worth doing" is reserved for when there
+     actually is one. */
+  .ms.reord.stale { border-left-color:var(--muted) }
+  .ms.reord.stale .vd { color:var(--muted) }
+  .ms.reord.stale .dt button { font-size:11px; padding:1px 6px }
+  .linkmsg { color:var(--accent); font-size:13px; font-weight:600 }
+  .err { color:var(--danger); font-size:13px; font-weight:600 }
+  /* THE MESSAGE HAS TO FOLLOW THE EYE, not sit in the toolbar. It lived inline
+     in the control bar, which is precisely where nobody is looking while
+     dragging a bar four hundred pixels below it — and with the bar collapsed, or
+     the page scrolled down at all, the refusal never appeared on screen. A rule
+     that explains itself somewhere you cannot see is the same as no rule, and
+     "can't start before Sep 21 — waiting on Database server" is the single most
+     useful sentence this tool says.
+     Fixed to the viewport, above the pinned inspector (z 50), and `:empty` so it
+     occupies nothing at all the rest of the time. pointer-events:none so it can
+     never swallow a click on the chart underneath it mid-drag. */
+  #msg { position:fixed; left:50%; top:12px; transform:translateX(-50%); z-index:60;
+         padding:9px 16px; border-radius:9px; font-size:14px; line-height:1.3;
+         background:var(--panel); border:1px solid var(--line); max-width:76vw;
+         box-shadow:0 10px 30px rgba(0,0,0,.55); pointer-events:none; text-align:center }
+  #msg:empty { display:none }
+  #msg.err, #msg.dirty { font-size:14px }
+  /* Rename is a POPOVER, not a permanent input. The plan name is already on
+     screen twice — the picker and the mini line — so a 300px always-on text box
+     was spending the scarcest thing in this tool (top-bar width) on a control
+     used once per plan. */
+  .popwrap { position:relative; display:inline-flex }
+  #renamepop { position:absolute; top:calc(100% + 7px); left:0; z-index:70; white-space:nowrap;
+               background:var(--panel); border:1px solid var(--line); border-radius:9px;
+               padding:10px 12px; box-shadow:0 12px 30px rgba(0,0,0,.55) }
+  #renamepop[hidden] { display:none }
+  /* Save's note is a popover for the same reason rename is: it is used once per
+     save, and permanent top-bar width is the scarcest thing in this tool. */
+  #savepop { position:absolute; top:calc(100% + 7px); right:0; z-index:70; white-space:nowrap;
+             background:var(--panel); border:1px solid var(--line); border-radius:9px;
+             padding:10px 12px; box-shadow:0 12px 30px rgba(0,0,0,.55) }
+  #savepop[hidden] { display:none }
+  #cmpchip { display:inline-flex; align-items:center; gap:3px; font-size:12px; font-weight:600;
+             color:var(--accent); border:1px solid var(--accent); border-radius:999px;
+             padding:1px 4px 1px 9px; max-width:320px }
+  #cmpchip[hidden] { display:none }
+  #cmpname { overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+  #cmpoff { border:0; background:none; color:var(--accent); cursor:pointer;
+            padding:0 3px; font-size:14px; line-height:1 }
+  /* History is a modal like Settings and the style wall — same card, same peel
+     order on Escape. Rows are a grid rather than a table so the note can be an
+     editable field that fills whatever width is left. */
+  #hist { position:fixed; inset:0; z-index:88; display:flex; align-items:flex-start;
+          justify-content:center; background:rgba(6,10,16,.74); padding:26px 20px }
+  #hist[hidden] { display:none }
+  #hist-close { position:absolute; top:10px; right:12px; border:0; background:none;
+                color:var(--muted); font-size:21px; line-height:1; cursor:pointer; padding:2px 7px }
+  #hist-close:hover { color:var(--text) }
+  .hrow { display:grid; grid-template-columns:34px 116px minmax(120px,1fr) 72px 128px 104px 56px 32px 84px;
+          gap:10px; align-items:center; padding:7px 9px; border-radius:8px; margin-bottom:6px;
+          border:1px solid var(--line); background:rgba(255,255,255,.03);
+          font-size:12.5px; font-variant-numeric:tabular-nums }
+  .hrow.now { border-color:var(--accent) }
+  .hrow > b { color:var(--muted); font-size:11.5px }
+  .hwhen, .hdelta { color:var(--muted) }
+  .hdelta { font-size:11.5px }
+  .hdelta .up { color:var(--danger) }
+  .hdelta .dn { color:var(--good) }
+  .hnote { width:100%; min-width:0; background:transparent; border:1px solid transparent;
+           border-radius:6px; color:var(--text); font:inherit; padding:3px 6px }
+  .hnote:hover { border-color:var(--line) }
+  .hnote:focus { border-color:var(--accent); outline:none; background:rgba(255,255,255,.05) }
+  .hnote::placeholder { color:var(--muted); opacity:.6; font-style:italic }
+  /* Settings: everything that is set once and then driven, moved off the top bar. */
+  #settings { position:fixed; inset:0; z-index:85; display:flex; align-items:flex-start;
+              justify-content:center; background:rgba(6,10,16,.74); padding:26px 20px }
+  #settings[hidden] { display:none }
+  /* Same overlay as #hist — one card idiom for "read this, then decide". */
+  #mentions { position:fixed; inset:0; z-index:89; display:flex; align-items:flex-start;
+              justify-content:center; background:rgba(6,10,16,.74); padding:26px 20px }
+  #mentions[hidden] { display:none }
+  #mentions .set-card { width:min(760px,96vw) }
+  #mentions-close { position:absolute; top:10px; right:12px; border:0; background:none;
+                    color:var(--muted); font-size:21px; line-height:1; cursor:pointer; padding:2px 7px }
+  #mentions-list { display:flex; flex-direction:column; gap:2px; margin:12px 0 16px }
+  #mentions-list label { display:flex; gap:9px; align-items:baseline; padding:7px 9px;
+                         border-radius:7px; font-size:13px; cursor:pointer }
+  #mentions-list label:hover { background:rgba(255,255,255,.05) }
+  #mentions-list .where { color:var(--muted); font-size:11px; text-transform:uppercase;
+                          letter-spacing:.05em; flex:0 0 64px }
+  /* The old text struck through and the new text in the accent, in place, so the
+     row reads as the edit rather than as two strings to diff by eye. */
+  #mentions-list del { color:var(--muted); text-decoration:line-through }
+  /* The gap is not cosmetic. Butted together these read as one run of characters
+     -- "migrationRates API cutover" -- which is the opposite of the thing this
+     row exists to show. */
+  #mentions-list ins { color:var(--accent); text-decoration:none; font-weight:600;
+                       margin-left:6px }
+  #mentions-act { display:flex; gap:9px }
+  /* The two buttons do very different things to other people's rows, so they must
+     not look alike. Every button on this page computes borderless, so weight is
+     the only thing left to separate them with. */
+  #mentions-apply { background:var(--accent); color:#05131f; font-weight:600 }
+  #mentions-apply:disabled { opacity:.4 }
+  .set-card { position:relative; width:min(1000px,96vw); max-height:88vh; overflow:auto;
+              background:var(--panel); border:1px solid var(--line); border-radius:14px;
+              padding:20px 22px 24px; box-shadow:0 24px 70px rgba(0,0,0,.6) }
+  .set-card h2 { margin:0 0 6px; font-size:19px; letter-spacing:-.01em }
+  #set-close { position:absolute; top:10px; right:12px; border:0; background:none;
+               color:var(--muted); font-size:21px; line-height:1; cursor:pointer; padding:2px 7px }
+  #set-close:hover { color:var(--text) }
+  .setsec { border-top:1px solid var(--line); padding-top:13px; margin-top:15px }
+  .setsec h3 { margin:0 0 9px; font-size:11px; letter-spacing:.07em; text-transform:uppercase;
+               color:var(--text); font-weight:700 }
+  .setsec .hint { color:var(--muted); font-size:12.5px; margin:-4px 0 9px; line-height:1.45 }
+  #arrowedit { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px,1fr)); gap:7px }
+  .arrit { display:flex; gap:9px; align-items:center; font-size:12px; padding:6px 9px;
+           background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:8px }
+  .arrit .lb { flex:1 1 auto; color:var(--text) }
+  .arrit svg { flex:0 0 auto }
+  .arrit input[type=color] { width:26px; height:20px; padding:0; border:0; background:none; flex:0 0 auto }
+  .arrit label { display:inline-flex; gap:4px; align-items:center; color:var(--muted); cursor:pointer }
+  .arrit label input { margin:0; cursor:pointer }
+  /* Counts live ON the legend, which is already the place you look to ask "how
+     many of those are there?". Tabular figures so the columns do not jitter as
+     you edit. */
+  .lgc { font-size:10px; color:var(--muted); opacity:.8; margin-left:3px;
+         font-variant-numeric:tabular-nums }
+  .swrow { margin-bottom:12px }
+  .swrow > b { font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--text) }
+  .swnote { font-size:11px; color:var(--muted); margin-left:7px }
+  .swgrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(118px,1fr));
+            gap:9px 10px; margin-top:7px }
+  .swx { display:flex; flex-direction:column; gap:4px; align-items:flex-start }
+  .swbar { position:relative; height:18px; width:104px }
+  .swx span { font-size:10.5px; color:var(--muted); font-family:ui-monospace,monospace }
+  .swapgrid { display:grid; grid-template-columns:repeat(auto-fit, minmax(320px,1fr)); gap:12px }
+  .swapcol { background:rgba(255,255,255,.04); border:1px solid var(--line);
+             border-radius:9px; padding:10px 12px }
+  .swapcol > b { display:block; font-size:11px; letter-spacing:.05em; text-transform:uppercase;
+                 color:var(--muted); margin-bottom:7px }
+  .swaprow { display:flex; align-items:center; gap:8px; font-size:12px; padding:2px 0 }
+  .swaprow .lb { flex:1 1 auto; color:var(--text) }
+  .swaprow select { font-size:11px; padding:2px 4px; min-width:96px }
+  .swaprow input[type=color] { width:26px; height:20px; padding:0; border:0; background:none }
+  .swapwarn { margin-top:8px; font-size:11.5px; line-height:1.45; color:var(--warn);
+              border-top:1px solid var(--line); padding-top:7px }
+  .swapwarn b { color:var(--text) }
+  #eye.on { background:var(--accent); color:#05131f; border-color:var(--accent) }
+  /* Sized like a <select> so the row reads as one kind of control, not two. */
+  .pickbtn { font:inherit; font-size:13px; margin-left:6px; padding:3px 8px;
+             max-width:190px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+             display:inline-flex; align-items:center; gap:6px }
+  .pickbtn i { font-style:normal; color:var(--muted); font-size:10px }
+  /* A SHAPE SWATCH IS A REAL `.shape`, for the reason the swatch wall gives: it
+     goes through the rules the chart itself uses, so it cannot drift.
+     It was a `.k` with an `sh-` class bolted on, and that quietly did not work.
+     `.k` sets its own `border-radius:3px` and is declared AFTER the `.sh-*`
+     block — equal specificity, later wins — so every RADIUS-based silhouette
+     (soft, pill, oval, roundleft, roundright) rendered as the same 3px
+     rectangle, while the CLIP-PATH ones (slant, chevron, diamond, notch) came
+     through fine because `.k` says nothing about clip-path. "Some of them work
+     and some don't" is the signature of a cascade collision, and the swatch wall
+     looking correct is the proof it was never the shapes themselves.
+     It is also WIDER than a `.k`, which is the other half of the fix: a
+     silhouette needs LENGTH. At 26px a pill and an oval are the same lozenge
+     however right the CSS is. */
+  /* The style control IS the swatch. Sized like the <select> it replaced so the
+     table's style column still lines up across channels. */
+  .stylebtn { font:inherit; padding:2px 7px; display:inline-flex; align-items:center; gap:6px;
+              background:rgba(255,255,255,.05); border:1px solid var(--line);
+              border-radius:6px; cursor:pointer; flex:0 0 auto }
+  .stylebtn:hover { border-color:var(--accent) }
+  .stylebtn i { font-style:normal; color:var(--muted); font-size:9px }
+  #stylepop { position:fixed; z-index:90; display:grid; grid-template-columns:repeat(4, auto);
+              gap:3px; background:var(--panel); border:1px solid var(--line); border-radius:9px;
+              padding:6px; box-shadow:0 12px 30px rgba(0,0,0,.55) }
+  #stylepop[hidden] { display:none }
+  .swopt { padding:5px; border:1px solid transparent; border-radius:5px; background:none;
+           cursor:pointer; display:flex; align-items:center; justify-content:center }
+  .swopt:hover { border-color:var(--accent); background:rgba(255,255,255,.07) }
+  .swopt.on { border-color:var(--accent); background:rgba(88,166,255,.20) }
+  /* ○ / ● — which value a task with none of this channel gets. Deliberately the
+     quietest control in the row: it is a property of the plan you set once, not
+     something you reach for while editing. */
+  .chit .btns .dflt.on { color:var(--accent) }
+  .nocol { display:inline-flex; align-items:center; gap:6px; font-size:11.5px; color:var(--muted) }
+  .nocol input[type=color] { width:26px; height:19px; padding:0; border:0; background:none;
+                             cursor:pointer }
+  .shk { position:relative; display:inline-block; width:40px; height:15px;
+         flex:0 0 auto; vertical-align:middle }
+  .shk .shape { background:#5b6a7c }
+  /* FIXED, NOT ABSOLUTE, AND PLACED FROM JS. #insp is `overflow-y:auto` with a
+     44vh cap, and an absolutely-positioned child of a scroll container is
+     CLIPPED BY IT. This popup opens upward, so on a plan with more than two or
+     three colours everything above the panel's own top edge simply was not
+     drawn — you saw the first item or two and nothing else, cut off dead level
+     with the panel. position:fixed leaves that clip; the price is that "above
+     the button" becomes something to measure rather than declare (colrPop).
+     max-height so a plan with twenty colours scrolls instead of running off the
+     top of the screen, which is the same failure wearing a different hat. */
+  #colrpop, #urlpop { position:fixed; z-index:70; min-width:180px; max-height:46vh; overflow-y:auto;
+             background:var(--panel); border:1px solid var(--line); border-radius:9px;
+             padding:6px; box-shadow:0 12px 30px rgba(0,0,0,.55) }
+  #colrpop[hidden], #urlpop[hidden] { display:none }
+  /* Wider than the colour list and not a list at all: one field, and a URL that
+     wraps is a URL you cannot read. */
+  #urlpop { min-width:360px; padding:10px 12px }
+  #urlpop .lbl { display:flex }
+  #urlpop .hint { white-space:normal }
+  .cpick { display:flex; align-items:center; gap:7px; font-size:12.5px; color:var(--text);
+           padding:4px 7px; border-radius:6px; cursor:pointer; white-space:nowrap }
+  .cpick:hover { background:rgba(255,255,255,.07) }
+  .cpick .k { width:16px; height:12px; border-radius:2px; flex:0 0 auto }
+  .cpick input { margin:0; cursor:pointer }
+
+  /* ---- PLAYBACK TRANSPORT -------------------------------------------------
+     PINNED TO THE BOTTOM AND UNMISTAKABLE, because while it is on screen the
+     chart above it is an ARCHIVED document and this tab is not in the room. A
+     subtle affordance here would be a chart you could read a date off and
+     believe. The warn-coloured top edge is the signal; the copy is the backup. */
+  /* [hidden] SETS display:none IN THE UA SHEET, AND `display:grid` BELOW BEATS IT.
+     Without this rule the bar was on screen from page load — and a check asserting
+     the `hidden` PROPERTY still passed, because the property was true the whole
+     time. Any element in this file with both `hidden` and a display rule needs it. */
+  #playbar[hidden] { display:none }
+  #playbar { position:fixed; left:0; right:0; bottom:0; z-index:60;
+             background:var(--panel); border-top:2px solid var(--warn);
+             padding:9px 14px 11px; display:grid; gap:6px 12px;
+             grid-template-columns:auto auto auto auto auto 1fr auto;
+             align-items:center; font-family:var(--sans);
+             box-shadow:0 -8px 24px rgba(0,0,0,.45) }
+  #playbar button { font:inherit; font-size:13px; padding:5px 10px }
+  #pb-exit { color:var(--warn) }
+  /* TABULAR AND FIXED-WIDTH, both of them. These two are the only cells whose
+     text changes every frame, and letting either size to its content makes the
+     scrubber between them resize as you drag it. */
+  #pb-count { font-variant-numeric:tabular-nums; font-size:13px; color:var(--text);
+              min-width:82px; text-align:center }
+  #pb-when  { font-variant-numeric:tabular-nums; font-size:12.5px; color:var(--muted);
+              width:250px; text-align:right; white-space:nowrap;
+              overflow:hidden; text-overflow:ellipsis }
+  #pb-track { display:flex; flex-direction:column; gap:2px; min-width:0 }
+  #pb-arc { width:100%; height:46px; display:block; cursor:pointer; overflow:visible }
+  #pb-arc .arc-fill { fill:var(--warn); opacity:.13 }
+  #pb-arc .arc-line { fill:none; stroke:var(--warn); stroke-width:1.6;
+                      vector-effect:non-scaling-stroke }
+  /* NON-SCALING on every stroke and no scaling on the text: the viewBox is
+     stretched horizontally by preserveAspectRatio="none", which would otherwise
+     smear a 1px rule into a wedge and the labels along with it. */
+  #pb-arc .arc-ms { stroke-width:1; stroke-dasharray:3 3; vector-effect:non-scaling-stroke }
+  #pb-arc .arc-head { fill:var(--text); stroke:var(--panel); stroke-width:1.5;
+                      vector-effect:non-scaling-stroke }
+  #pb-arc .arc-now { stroke:var(--text); stroke-width:1; opacity:.5;
+                     vector-effect:non-scaling-stroke }
+  /* NO TEXT INSIDE THIS SVG. The viewBox is stretched horizontally, which smears
+     glyphs; the milestone rules carry <title> tooltips instead, and the milestone
+     chips above the chart already name each one and restate its verdict as you
+     scrub, which is the labelling that actually answers "am I under the line". */
+  #pb-scrub { width:100%; accent-color:var(--warn); margin:0 }
+  /* Fixed height so a six-line note and an empty one do not resize the bar and
+     shove the chart, which reads as the chart moving. */
+  #pb-note { grid-column:1 / -1; font-size:12.5px; line-height:1.45; color:var(--muted);
+             height:3em; overflow-y:auto; border-left:2px solid var(--warn);
+             padding-left:9px }
+  #pb-note em { color:var(--muted); opacity:.75; font-style:normal }
+  /* The chart has to clear the bar or the last lanes sit under it. */
+  body.playing #chart { padding-bottom:120px }
+
+  /* NOTHING MOVES IF NOTHING IS WATCHING. The panel and the chart are built in
+     three waves — static markup at first paint, React once the document lands
+     on the socket ~100ms later, and then whichever lens the last visit left
+     open, which hides two toolbar controls and reflows the bar again. Measured
+     end to end that came to 0.37 cumulative layout shift, against 0.1 for
+     "good", and it reads as a page assembling itself in front of you.
+
+     Reserving space for the late regions was tried first and measured WORSE
+     (0.55): it fixes the growth and not the reflow, and it pays for a sparse
+     plan with a strip of empty panel.
+
+     `visibility`, not `display`: the layout is still computed, so everything
+     that measures itself during boot — the row-label gutter width, the graph's
+     container size — gets real numbers rather than zeroes. The failsafe in
+     `app.ts` removes this on every exit path, including the ones that failed,
+     because a plan that would not open must still show you why. */
+  body.booting #top, body.booting #chart, body.booting #graph { visibility:hidden }
+
+/* ---- the plan chat (ui/Assistant.tsx) ---- */
+#assist { position: fixed; top: 64px; right: 16px; z-index: 60; width: min(440px, 92vw); }
+.assistant { background: var(--panel, #161b22); border: 1px solid var(--accent, #58a6ff); border-radius: 10px; padding: 8px 10px; box-shadow: 0 8px 30px #0008; display: flex; flex-direction: column; gap: 6px; }
+.assistant-log { max-height: 55vh; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; font-size: 13px; }
+.assistant-line { padding: 5px 8px; border-radius: 8px; white-space: pre-wrap; }
+.assistant-line.you { align-self: flex-end; background: #1f3a5f; }
+.assistant-line.agent { align-self: flex-start; background: #21262d; }
+.assistant-line.action { align-self: flex-start; color: #5fd28a; font-size: 12px; padding: 0 8px; }
+.assistant-line.error { color: #ff7b72; }
+.assistant .muted { opacity: .6; font-size: 12px; }
+.assistant-row { display: flex; gap: 8px; align-items: flex-start; }
+.assistant textarea { flex: 1; resize: none; field-sizing: content; min-height: 24px; max-height: 30vh; font: inherit; padding: 5px 8px; }
+.assistant-tools { display: flex; gap: 8px; align-items: center; }
+.assistant-tools .muted { margin-left: auto; }
+.assistant-open { margin-left: 8px; font-size: 11px; padding: 0 6px; }
+.assistant-line.approval { align-self: stretch; border: 1px solid #d29922; background: #2d2410; }
+.assistant-line.approval.rejected, .assistant-line.approval.approved { opacity: .6; border-color: #30363d; }
+.assistant-approve { display: flex; gap: 6px; margin-top: 6px; }
+.assistant-approve .danger { background: #da3633; color: #fff; border-color: #da3633; }

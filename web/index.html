@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<!--
+  AGENT / LLM READING THIS PAGE: do not drive this UI. Every gesture here is an
+  HTTP command, and every date on screen is derived — the chart is a lens over a
+  document, so clicking is the same work through a worse interface.
+
+    GET /AGENTS.md    how to drive this programmatically   <- read this first
+    GET /commands.js  the command vocabulary, as the code both sides actually run
+
+  The token after '#' in your share link is the whole credential: send it as the
+  `x-timeline-token` header. Never put it in a URL, a log line, or a commit.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Timeline Studio</title>
+<meta name="viz:posture" content="public">
+<meta name="viz:listed" content="listed">
+<meta name="viz:title" content="Timeline Studio">
+<meta name="viz:description" content="Edit a resource-constrained delivery timeline live — drag durations, link dependencies, watch the finish date move.">
+
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body class="booting">
+<div id="assist"></div>
+<div class="panel" id="top">
+  <button id="collapse" title="Collapse the control bar">⌃</button>
+  <div id="mini"></div>
+  <!-- THE TOP BAR IS THE SCARCEST SPACE IN THIS TOOL, so it holds only what gets
+       touched WHILE a meeting is running: add/link/undo/save. Anything set once
+       and then driven — start date, sprint cadence, import, fork, and every
+       channel definition — lives behind ⚙. -->
+  <!-- THERE IS NO PLAN PICKER, AND THAT IS THE SECURITY MODEL, not a missing
+       feature. A dropdown of every plan needs an endpoint that enumerates them,
+       and one valid link must never expose a second plan — so a plan is reached
+       by its URL and by nothing else. See docs/adr/0002-capability-tokens-no-sso.
+       What used to sit on the left of this bar is now the address bar. -->
+  <div class="toolbar">
+    <span class="popwrap">
+      <button id="renamebtn" title="Rename this plan">✎</button>
+      <!-- EMPTY: ui/PlanName.tsx draws the field. It is controlled, which is what
+           retired the last `emit(cmd, keep)` — see that file. -->
+      <div id="renamepop" hidden></div>
+    </span>
+    <button id="newplan" title="Start an empty plan">New</button>
+    <!-- Three zones, not one run. WHICH plan on the left, WHAT YOU DO to it in the
+         middle, WHAT HAPPENS TO IT on the right — so the two buttons that write
+         are nowhere near the two you press constantly. The spacers are flex-grow
+         rather than fixed margins, so the middle group stays centred at any
+         window width. -->
+    <span class="grow"></span>
+    <!-- TWO LENSES ON ONE PLAN, so the switch sits with the other view control
+         rather than among the buttons that edit. Neither lens touches the
+         schedule; both read the same filter, the same selection and the same
+         chain focus. -->
+    <label class="lbl" title="Timeline answers WHEN. Graph answers WHAT WAITS ON WHAT.">View
+      <select id="view"><option value="timeline">Timeline</option><option value="relative">Elapsed</option><option value="graph">Graph</option><option value="board">Kanban</option><option value="calendar">Calendar</option></select></label>
+    <!-- THE CALENDAR'S SPAN, where Rows sits for the timeline: the calendar has no rows. -->
+    <label class="lbl" id="calspanwrap" hidden title="One day, or the week it is in (Settings → Week starts)">Show
+      <select id="calspan"><option value="week">Week</option><option value="day">Day</option></select></label>
+    <!-- ORTHOGONAL TO View, not a fourth entry in it. Timeline and Elapsed are
+         both row lists and both take either row order; Graph has no rows at all,
+         so this hides with the zoom rather than offering a combination that
+         means nothing. -->
+    <label class="lbl" id="rowmodewrap" title="Team: rows are grouped by team, and their order IS the queue you can edit. Date: one flat list in the order work starts, so reading downward is reading forward in time.">Rows
+      <select id="rowmode"><option value="team">Team</option><option value="date">Date</option></select></label>
+    <label class="lbl" id="zoomwrap" title="How much time fills the window. Pinch or scroll sideways.">Zoom
+      <span class="pickhost" id="zoomhost"></span></label>
+    <!-- THE TIMELINE'S ANSWER TO THE GRAPH'S "Fit", and it sits beside Zoom
+         rather than over by the chart because it IS a zoom: it picks the span
+         that frames what is on screen, which is the one setting the picker
+         cannot offer as a name. It reads the FILTERED rows, so "fit" means fit
+         what you are looking at, not fit the plan. -->
+    <button id="tfit" title="Frame the visible tasks: zoom so everything currently on the chart fits the window. Shortcut: F">Fit</button>
+    <!-- FOLDED BY DEFAULT, and one button wide until you ask. Panning and zooming
+         were gesture-only, which is fine until you want a single precise step or
+         you are on a mouse with no horizontal wheel. -->
+    <button id="navtoggle" title="Pan and zoom buttons">↔</button>
+    <span id="navpad" hidden>
+      <button id="panl" title="Pan left">◀</button>
+      <button id="zoomout" title="Zoom out — show more time">−</button>
+      <button id="zoomin" title="Zoom in — show less time">+</button>
+      <button id="panr" title="Pan right">▶</button>
+    </span>
+    <!-- STATIC, and deliberately NOT built by `legend()`. Every control inside
+         #legend is re-innerHTML'd on each render, which would drop the caret in
+         the middle of a word. It sits with View and Zoom rather than among the
+         buttons that edit because it is the same kind of thing they are: it
+         changes what you are looking at and touches nothing. -->
+    <label class="lbl" title="Show only tasks whose name or description contains this. Composes with the legend.">Find
+      <!-- `type=text`, NOT `type=search`. The theme rule enumerates the input types
+           it styles (`input[type=number], input[type=text]`), so a search input
+           falls through to the browser default and lands a white box in a dark
+           toolbar. Every other input on this page is a text input for the same
+           reason. The × a search input would have given us is Escape instead. -->
+      <input type="text" id="q" placeholder="name or note…" style="min-width:140px"></label>
+    <button id="add">+ Task</button>
+    <button id="dice" title="Pick a random task from what is on screen (respects the filter)">🎲</button>
+    <button id="assistbtn" title="Chat with the plan (⌘K)">💬</button>
+    <span class="grow"></span>
+    <!-- A comparison paints a strip under every bar, so something has to say where
+         those came from. It was a stamp two clicks deep in Settings before, which
+         is how you end up looking at marks on a chart and not knowing why. -->
+    <!-- WHO ELSE IS LOOKING AT THIS. In the right-hand zone with Save and Revert,
+         because "what happens to it" is exactly what another person in the room
+         is: the reason to check before pressing Revert. Empty and hidden until a
+         socket has actually joined, so the fixture never claims a room. -->
+    <span id="who" class="who" hidden></span>
+    <span id="cmpchip" hidden><span id="cmpname"></span><button id="cmpoff" title="Stop comparing">×</button></span>
+    <span id="dirty" class="dirty"></span>
+    <span class="popwrap">
+      <button id="save">Save</button>
+      <div id="savepop" hidden><label class="lbl">What changed?
+        <input type="text" id="savenote" style="min-width:290px"
+               placeholder="optional — Enter to save, Esc to cancel"></label></div>
+    </span>
+    <button id="revert">Revert</button>
+    <!-- "What did this look like last week?" is a question people ask OUT LOUD in
+         the meeting, which is the test for being on this bar at all. It is also
+         the natural third of Save / Revert / History. -->
+    <button id="histbtn" title="Every version of this plan you have saved">History</button>
+    <!-- ON THE BAR RATHER THAN IN SETTINGS, unlike the JSON export it sits beside
+         in the code. What it exports is what you are looking at, so the decision
+         to take it is made while looking at it — two clicks deep in a dialog is
+         two clicks after the moment passed. -->
+    <button id="shot" title="Copy this view as a PNG image. Alt-click to download it instead.">Image</button>
+    <button id="cog" title="Settings — dates, storage, import/export, styles">⚙</button>
+    <button id="help" title="What is this? (opens the intro again)">?</button>
+  </div>
+  <!-- THE NOTICE (ui/Notice.tsx). Outside the collapse rule, so it shows on a folded bar too. -->
+  <div id="notice"></div>
+  <div id="msbar"></div>
+  <div id="legend"></div>
+</div>
+
+
+<!-- RENAMING A TASK LEAVES ITS NAME BEHIND IN OTHER TASKS. "Approve Rates API
+     migration" is a copy of another task's name, and nothing was keeping the two
+     honest — so a rename silently left a plan asserting a name that no longer
+     existed. This is the fix, and it is deliberately NOT a template syntax: the
+     document stays plain strings, which is what keeps search, exports, History
+     diffs and the agent API all reading the same thing the chart draws.
+
+     IT ASKS. Substring matching is dumb by design and short names are where that
+     bites — renaming "QA" would reach "QA signoff" and "Hand to QA" — so every
+     row is previewed and can be unticked. It also edits rows other people in the
+     room may be looking at, which is not something to do silently. -->
+<div id="mentions" hidden><div class="set-card">
+  <button id="mentions-close" title="Close (Esc)">×</button>
+  <h2>Other tasks mention the old name</h2>
+  <div class="hint" id="mentions-sub"></div>
+  <div id="mentions-list"></div>
+  <div id="mentions-act">
+    <button id="mentions-apply"></button>
+    <button id="mentions-skip">Leave them as they are</button>
+  </div>
+</div></div>
+
+<div id="hist" hidden><div class="set-card">
+  <button id="hist-close" title="Close (Esc)">×</button>
+  <h2>History <button id="hist-play-all" title="Play every save in order, from the first">Play all ▶</button></h2>
+  <div class="hint" id="hist-sub"></div>
+  <div id="hist-list"></div>
+</div></div>
+
+<!-- PLAYBACK TRANSPORT. Hidden until Play history is pressed, and while it is up
+     you are OUT of the room — see startPlayback for why that is the design and
+     not a limitation. The bar is deliberately loud: a chart showing a document
+     nobody else can see must never be mistakable for the live one. -->
+<!-- EMPTY, AND DRAWN BY ui/Playbar.tsx. The transport and the forecast arc were
+     nine elements here, updated by hand on every step — `textContent` on four of
+     them, `.value` on the scrubber, and an SVG built with createElementNS whose
+     head was then moved by `setAttribute`. React renders the lot from the
+     playback session; the ids survive, so the stylesheet and the selector guard
+     are unchanged. -->
+<div id="playbar" hidden></div>
+</div>
+
+<div id="settings" hidden><div class="set-card">
+  <button id="set-close" title="Close (Esc)">×</button>
+  <h2>Settings</h2>
+  <!-- TABS, not one long scroll. Four unrelated jobs stacked in a column meant the
+       one you wanted was always somewhere below the fold, and reaching it scrolled
+       past two you did not. Each tab is one job. -->
+  <div class="settabs">
+    <button data-tab="plan">Plan</button>
+    <button data-tab="channels">Channels</button>
+    <button data-tab="swap">Swap</button>
+    <button data-tab="arrows">Arrows</button>
+    <button data-tab="links">Links</button>
+    <button data-tab="global">Global</button>
+  </div>
+
+  <!-- EVERY TAB IS ONE SCOPE NOW, not just one job. This one is THIS DOCUMENT:
+       its dates, a copy of it, a download of it. Nothing here can affect another
+       plan, which is what makes it safe to poke at. -->
+  <div class="setsec" data-panel="plan">
+    <div class="toolbar">
+      <label class="lbl">Start <input type="date" id="start"></label>
+      <label class="lbl">Sprint <input type="number" id="sprintw" min="0" step="0.5" title="0 or blank = this plan has no sprint cadence" style="width:62px"> wks
+        from <input type="date" id="sprint0"></label>
+      <span class="sep"></span>
+      <label class="lbl" title="The server keeps every team's queue in the order the Order search would suggest, after every change that could move it. You can still reorder by hand: your order stays unless it makes the plan worse."><input type="checkbox" id="autoorder"> Auto-order</label>
+      <span class="sep"></span>
+      <button id="fork" title="Copy this plan to a new one">Fork</button>
+      <button id="exportone" title="Download this plan as JSON">Export</button>
+    </div>
+    <div id="noticeedit-host"></div>
+    <!-- Comparing against an older version used to live here, as a snapshot frozen
+         into the document. It is a lens now, and lenses belong with the thing they
+         look at — so it is a button on a row in History. -->
+    <!-- WHICH DAYS THE WORK HAPPENS ON. Both of these belong to THIS PLAN and
+         travel with it: a schedule that changes depending on which browser opens
+         the file is invisible state deciding a date, which is the thing this
+         tool exists to refuse. -->
+    <div class="hint" style="margin-top:14px">Durations are <b>hours of work</b>, spent only inside the
+      windows below. Work stops at the end of a window and resumes at the next one — a task keeps
+      its duration and takes longer on the calendar, which is what the shaded gaps are. A day off
+      is a day with no windows, and a <i>date</i> can have its own.</div>
+    <div id="wwedit"></div>
+  </div>
+
+  <div class="setsec" data-panel="channels">
+    <div class="hint">What the row label says, then what this plan calls each channel and the
+      values behind it. Removing a value reassigns its tasks rather than orphaning them.</div>
+    <div id="labelparts"></div>
+    <div id="chedit"></div>
+  </div>
+
+  <div class="setsec" data-panel="swap">
+    <div class="hint">A channel is a rendering, not a meaning — so a meaning can move.
+      Send “dev / QA / prod” from the border to the fill and the tasks come with it;
+      what you choose below is how each one should be <i>drawn</i> once it gets there.
+      Nothing is merged, and it is a big change — <b>Save first</b> if you might want it back.</div>
+    <div class="toolbar" style="margin-bottom:10px">
+      <label class="lbl">Swap <span class="pickhost" id="swapahost"></span></label>
+      <label class="lbl">with <span class="pickhost" id="swapbhost"></span></label>
+      <button id="swapgo">Swap them</button>
+    </div>
+    <div id="swapmap"></div>
+  </div>
+
+  <div class="setsec" data-panel="arrows">
+    <!-- HOW FAR comes before HOW IT LOOKS, because on a chart of any size the
+         first thing you want from the arrows is LESS of them, not a different
+         blue. The whole transitive closure of a sixty-task plan is a diagram of
+         the plan, not an answer about one task. -->
+    <div class="hint">How far the chain lights up. <b>Hover is a glance</b> — you are sweeping
+      the pointer to see what each bar touches, so it stays shallow; <b>a click is deliberate</b>,
+      so it reaches further. Anything past the limit is still drawn, just left grey:
+      <i>you asked not to be told</i> should not look like <i>there is nothing there</i>.</div>
+    <div class="toolbar" style="margin-bottom:14px">
+      <label class="lbl" title="Hops of chain coloured while the pointer is over a bar">On hover
+        <span class="pickhost" id="dhoverhost"></span></label>
+      <label class="lbl" title="Hops of chain coloured for the selected task">On click
+        <span class="pickhost" id="dclickhost"></span></label>
+    </div>
+    <div class="hint">Four relationships, four styles. Solid is one hop, dashed is the rest of
+      the chain — so a colour reads as a <i>direction</i> and the dash as <i>distance</i>.
+      Stored on the plan, so a plan can carry its own convention.</div>
+    <div id="arrowedit"></div>
+  </div>
+
+  <!-- AND THIS ONE IS EVERYTHING ELSE — the shelf, not the book. Import loads
+       whatever is in a file onto the server: possibly several plans, none of them
+       the one you are looking at. It sat under "This plan", where the heading
+       said it was about the plan in front of you and it was not.
+       "Export all" used to live here too and cannot any more — writing out every
+       plan means listing every plan, and nothing may enumerate them. -->
+  <div class="setsec" data-panel="links">
+    <div class="hint">A task's <b>reference</b> is half a link. This is the other half, and it
+      lives <b>in this browser, for this plan only</b> — never on the document, so it is not in
+      the plan, not in the archive, and not in the link you hand someone to show them the chart.
+      That is deliberate: a reference names a row in a system it does not identify.</div>
+    <div class="toolbar" style="margin-top:10px">
+      <label class="lbl" style="flex:1">Link base
+        <input type="url" id="refbase" placeholder="https://example.com/…/{ref}"
+               style="flex:1;min-width:340px"></label>
+    </div>
+    <div class="hint" style="margin-top:6px"><code>{ref}</code> is where the reference goes. Leave
+      it out and the reference is appended to the end. Clear the box to turn reference links
+      off.</div>
+    <div class="toolbar" style="margin-top:12px">
+      <button id="krcopy" title="A link that opens this plan AND sets the link base above">Copy link with this setting</button>
+      <span id="krsample" class="hint" style="margin-left:8px"></span>
+    </div>
+    <div class="hint" style="margin-top:6px">The ordinary plan link carries none of this. Send
+      <b>this</b> one only to people who are already inside — it puts the tracker's address in a
+      URL, and a URL gets forwarded.</div>
+  </div>
+
+  <div class="setsec" data-panel="global">
+    <!-- The line here used to say Import could "write plans this window has never
+         opened, under whatever ids the file names". Neither half survived the
+         server choosing ids: an import can only ever CREATE, it never lands on an
+         existing plan, and the id in the file is a suggestion for the name. -->
+    <div class="hint">Nothing here belongs to a plan. Import creates a <b>new</b> plan for each
+      one in the file — it never writes over a plan that already exists, and the ids in the
+      file are only suggestions. Each new plan gets its own link, and that link is the only
+      way back to it.</div>
+    <div class="toolbar">
+      <button id="importbtn" title="Load plans from a JSON file">Import</button>
+      <input type="file" id="importfile" accept="application/json,.json" hidden>
+      <span class="sep"></span>
+      <label class="lbl fmode" title="Read the plan without showing up in it: no cursor, no chip in anyone else's roster, and not counted in viewers. Your edits and saves still carry your name."><input type="checkbox" id="lurk"> Watch without appearing</label>
+    </div>
+    <div class="hint" style="margin-top:10px">This hides a <b>pointer</b>, not an author. Anything you
+      change is still sequenced, still broadcast to the room, and still attributed to you — so the
+      honest use is watching a plan you are not editing, not editing one unseen.</div>
+  </div>
+</div></div>
+
+<!-- THE SWATCH WALL IS NOT A SETTING. Nothing on it changes anything — it is a
+     reference, and it belongs with the other "what is this thing" material behind
+     the ? rather than among four panels that all write to the document. -->
+<!-- A DIRECT CHILD OF BODY, like #msg and for the same reason: the settings card
+     scrolls, and a popover parented inside it gets clipped by that scroll — which
+     is exactly how the colour picker lost two thirds of its list. -->
+<div id="stylepop" hidden></div>
+
+<div id="wall" hidden><div class="set-card">
+  <button id="wall-close" title="Close (Esc)">×</button>
+  <h2>Every style, side by side</h2>
+  <div class="hint" style="margin:-2px 0 14px">Each axis independently — the combinations
+    multiply into the hundreds and none of them would tell you anything these three rows
+    don't. Drawn with the same code the chart uses, so it cannot drift.</div>
+  <div id="swatchwall"></div>
+</div></div>
+
+<!-- QUEUE ORDER, REVIEWED BY A HUMAN. `suggestReorders` has been in shared/ since
+     it was written and reachable at /api/reorder, but nothing in the page ever
+     called it: the only in-UI reordering was the manual up/down arrows, so the
+     32-day error it was written to find stayed invisible to anyone not driving
+     the tool over HTTP.
+     IT STILL DOES NOT APPLY ANYTHING BY ITSELF. schedule.js argues that case at
+     length and it is the right one — the objective function knows finish dates
+     and does not know that a spike exists to answer a question early. So this is
+     a list with a button per row, not a fix-it. One move, chosen by a person,
+     then the numbers are recomputed because applying one invalidates the rest. -->
+<div id="reorder" hidden><div class="set-card">
+  <button id="reorder-close" title="Close (Esc)">&times;</button>
+  <h2>Review</h2>
+  <div class="hint" style="margin:-2px 0 12px">A lane is a serial queue and ties break by
+    position, so the order rows sit in <b>is</b> the order that team works in — and it is the
+    one scheduling input that leaves no arrow on the chart. Each move below is measured
+    against the order you have now, so applying one changes the rest: they are recomputed
+    after every apply.</div>
+  <!-- TWO QUESTIONS, ONE PANEL. Suggestions are measured advice about dates; Rank is
+       "which should happen first?", asked a pair at a time — and the order it produces
+       is what Auto-order and the suggestions use to break ties once the dates are
+       equal. Beside each other because each is one input to the same queue. -->
+  <!-- AND A THIRD, ABOUT THE PAST (ADR 0020): a planned stretch that is over asks whether it happened. Here because the
+       panel is where the plan asks you things; the clock never answers it for you (ADR 0017). -->
+  <div class="otabs" role="tablist">
+    <button id="otab-moves" role="tab" aria-selected="true">Suggestions</button>
+    <button id="otab-rank" role="tab" aria-selected="false">Rank <span id="otab-unranked" class="obadge rk" hidden></span></button>
+    <button id="otab-past" role="tab" aria-selected="false">Past plans <span id="otab-pastn" class="obadge" hidden></span></button>
+  </div>
+  <div id="reorder-body"></div>
+  <div id="rank-body" hidden></div>
+  <div id="past-body" hidden></div>
+</div></div>
+
+<!-- `#rows` IS REACT'S (ui/Grid.tsx); everything else in `#grid` stays
+     imperative and everything else is `position:absolute` against `#grid`, so
+     the gridlines, the arrow layer and the cursor layer are unaffected by the
+     rows moving one level down. The axis is in flow and stays above them. -->
+<div id="chart"><div id="grid"><svg id="arrows"></svg><div id="axis"></div><div id="rows"></div><div id="furniture" class="nobox"></div></div></div>
+<!-- THE KANBAN LENS: status columns built by `boardColumns` from the same
+     `readiness()` as /api/ready. Dragging a card writes session events (start, stop, finish, reopen) — see ADRs 0009 and 0016. -->
+<div id="board" hidden></div>
+<!-- THE CALENDAR LENS: sessions, planned stretches and the scheduler's forecast on a
+     wall-clock grid, read-only. Built by `drawCal` in app.ts. -->
+<div id="cal" hidden>
+  <div class="toolbar" id="calbar">
+    <button id="calprev" title="Previous day or week. Shortcut: ←">‹</button>
+    <button id="caltoday" title="Back to today">Today</button>
+    <button id="calnext" title="Next day or week. Shortcut: →">›</button>
+    <span id="caltitle" class="lbl"></span>
+  </div>
+  <div id="calhead"></div>
+  <div id="calbody"></div>
+</div>
+<div id="graph" hidden>
+  <div class="toolbar" id="graphbar">
+    <label class="lbl" title="The whole plan, or only what the selected task is connected to">Show
+      <select id="gscope">
+        <option value="all">Whole plan</option>
+        <option value="chain">Selected chain</option>
+      </select></label>
+    <label class="lbl" title="Keep each value's work in its own horizontal band. On a plan that is really several parallel efforts, this is the difference between a mesh and a few readable ribbons.">Group by
+      <span class="pickhost" id="ggrouphost"></span></label>
+    <span id="ghint" class="lbl" style="color:var(--muted)"></span>
+    <span class="grow"></span>
+    <button id="garrange" title="Throw away the hand-arranged positions and lay the graph out again">Arrange</button>
+    <button id="gfit" title="Frame everything again. Shortcut: F">Fit</button>
+  </div>
+  <div id="cy"></div>
+</div>
+<div id="insp" class="panel" style="padding:12px 16px" hidden></div>
+<!-- A DIRECT CHILD OF BODY, deliberately. This lived inside the control bar's
+     .toolbar, and `#top.collapsed .toolbar { display:none }` took the message
+     down with it — so the one moment you most need to be told why a drag was
+     refused (mid-demo, bar collapsed for screen space, scrolled into the chart)
+     was the exact moment nothing was said. position:fixed does not rescue a
+     subtree an ancestor has set to display:none; only not being in that subtree
+     does. Keep it out here. -->
+<div id="msg"></div>
+<div id="landing" hidden><div class="land-card">
+  <h1>Timeline Studio</h1>
+  <p class="sub">A delivery plan you can <b>argue with in the room</b>. Lanes are queues that can only
+  do so much at once, tasks wait on each other, and the date at the top is <b>computed, never typed</b> —
+  so when someone says "could that start later?", you drag it and everyone watches the answer move.</p>
+  <div class="land-act">
+    <button class="land-new" id="door-new">+ New plan</button>
+  </div>
+  <!-- SAID ONCE, IN FRONT, IN THE PLACE SOMEBODY ARRIVES. This is ADR 0002's
+       accepted consequence, and a first-time visitor cannot discover it from
+       anywhere else in the tool: there is no login to imply an account, no
+       plan list to imply a home, and no password reset to imply recovery. -->
+  <p class="land-key"><b>The link is the key.</b> A plan has no login and no owner — anyone
+  holding its link can read and edit it, and the link is the only way back to it. There is no
+  list of your plans and no way to recover one from a lost link. Keep it somewhere you keep
+  things, and share it exactly as widely as you mean to.</p>
+  <div id="recents-block" hidden>
+    <div class="land-h2">Plans you have opened</div>
+    <ul class="recents" id="recents"></ul>
+  </div>
+  <div class="land-h2">Have a look around</div>
+  <div class="doors">
+    <button class="door" id="door-demo"><b>Open the demo plan →</b>
+      <span>A small bakery fit-out, twelve tasks, already missing one of its two dates. A real
+      shared plan that anyone can edit — drag something and watch what it costs.</span></button>
+    <button class="door" id="door-styles"><b>See every style →</b>
+      <span>Every shape, fill and border this chart can draw, side by side. A reference, not a
+      setting — nothing on it changes anything.</span></button>
+  </div>
+  <div class="land-h2">Keys</div>
+  <!-- THE ONLY PLACE THAT SAYS THESE EXIST, and the reason the ? button opens
+       this card rather than a second panel. Each key is also written on the
+       title of the control it presses — that is where you look once you suspect
+       there is a key; this is where you look when you do not.
+       FIVE, AND NO MORE THAN ARE REAL. A shortcut list padded out with gestures
+       and modifier soup is one nobody reads to the end of, and a binding that
+       edits the plan is deliberately not in here — see the note over the keydown
+       handler in app.ts for why this tool has view keys and no task keys. -->
+  <ul class="land-keys">
+    <li><kbd>F</kbd> frame what is on screen — whichever view you are in</li>
+    <li><kbd>C</kbd> clear every filter, the search box and the view toggles</li>
+    <li><kbd>Enter</kbd> <span>or</span> <kbd>Space</kbd> open the task you are on, again to grow the panel</li>
+    <li><kbd>Tab</kbd> walk the chart without a mouse, one task a step</li>
+    <li><kbd>Esc</kbd> close whatever is open, one layer at a time</li>
+  </ul>
+  <p class="land-foot">Dates are computed from durations, dependencies and how much each team can
+  run at once — so the finish date is an answer, not a field. Every edit reaches everyone looking
+  at the plan immediately; Save writes a version with a note, which is the only description of a
+  change anybody gets later.</p>
+</div></div>
+
+<script type="module" src="/src/app.ts"></script>
+</body>
+</html>

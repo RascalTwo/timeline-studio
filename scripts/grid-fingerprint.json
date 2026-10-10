@@ -1,0 +1,1992 @@
+{
+ "team": [
+  {
+   "label": "Task 0",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 2",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-diamond rim-none",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "polygon(8px 0px, calc(100% - 8px) 0px, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0px 50%)",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "core fillbody sh-diamond pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "polygon(8px 0px, calc(100% - 8px) 0px, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0px 50%)",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 4",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-hatch",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 6",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 8",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 10",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-hatch",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 1",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-hatch",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "band pat-hatch",
+       "style": {
+        "background-color": "rgb(185, 139, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 3",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar hasw",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-right": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-bottom": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-left": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "0.1"
+       }
+      },
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-right": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-bottom": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-left": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "estlead",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "repeating-linear-gradient(90deg, rgb(63, 185, 80) 0px, rgb(63, 185, 80) 3px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0) 6px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "none",
+        "opacity": "0.8"
+       }
+      },
+      {
+       "cls": "esttick early",
+       "style": {
+        "background-color": "rgb(63, 185, 80)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "1px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 5",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "band pat-solid",
+       "style": {
+        "background-color": "rgb(185, 139, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 7",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-diamond rim-solid",
+       "style": {
+        "background-color": "rgba(255, 255, 255, 0.92)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "polygon(8px 0px, calc(100% - 8px) 0px, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0px 50%)",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "core fillbody sh-diamond pat-hatch",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "polygon(8px 0px, calc(100% - 8px) 0px, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0px 50%)",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 9",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "band pat-solid",
+       "style": {
+        "background-color": "rgb(185, 139, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  }
+ ],
+ "folded": [
+  {
+   "label": "",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    },
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-diamond rim-none",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "polygon(8px 0px, calc(100% - 8px) 0px, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0px 50%)",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "core fillbody sh-diamond pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "polygon(8px 0px, calc(100% - 8px) 0px, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0px 50%)",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    },
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-hatch",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    },
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    },
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    },
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-hatch",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 1",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-hatch",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "band pat-hatch",
+       "style": {
+        "background-color": "rgb(185, 139, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 3",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar hasw",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-right": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-bottom": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-left": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "0.1"
+       }
+      },
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-right": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-bottom": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-left": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "estlead",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "repeating-linear-gradient(90deg, rgb(63, 185, 80) 0px, rgb(63, 185, 80) 3px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0) 6px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "none",
+        "opacity": "0.8"
+       }
+      },
+      {
+       "cls": "esttick early",
+       "style": {
+        "background-color": "rgb(63, 185, 80)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "1px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 5",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "band pat-solid",
+       "style": {
+        "background-color": "rgb(185, 139, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 7",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-diamond rim-solid",
+       "style": {
+        "background-color": "rgba(255, 255, 255, 0.92)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "polygon(8px 0px, calc(100% - 8px) 0px, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0px 50%)",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "core fillbody sh-diamond pat-hatch",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "polygon(8px 0px, calc(100% - 8px) 0px, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0px 50%)",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Task 9",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "band pat-solid",
+       "style": {
+        "background-color": "rgb(185, 139, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  }
+ ],
+ "date": [
+  {
+   "label": "Team BTask 3",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar hasw",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-right": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-bottom": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-left": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "0.1"
+       }
+      },
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-right": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-bottom": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-left": "2px solid rgba(255, 255, 255, 0.92)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "estlead",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "repeating-linear-gradient(90deg, rgb(63, 185, 80) 0px, rgb(63, 185, 80) 3px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0) 6px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "none",
+        "opacity": "0.8"
+       }
+      },
+      {
+       "cls": "esttick early",
+       "style": {
+        "background-color": "rgb(63, 185, 80)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "1px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Team ATask 0",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Team BTask 1",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-hatch",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "band pat-hatch",
+       "style": {
+        "background-color": "rgb(185, 139, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Team ATask 2",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-diamond rim-none",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "polygon(8px 0px, calc(100% - 8px) 0px, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0px 50%)",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "core fillbody sh-diamond pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "polygon(8px 0px, calc(100% - 8px) 0px, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0px 50%)",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Team BTask 5",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "band pat-solid",
+       "style": {
+        "background-color": "rgb(185, 139, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Team ATask 4",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-hatch",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Team BTask 7",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-diamond rim-solid",
+       "style": {
+        "background-color": "rgba(255, 255, 255, 0.92)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "polygon(8px 0px, calc(100% - 8px) 0px, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0px 50%)",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "core fillbody sh-diamond pat-hatch",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "polygon(8px 0px, calc(100% - 8px) 0px, 100% 50%, calc(100% - 8px) 100%, 8px 100%, 0px 50%)",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Team ATask 6",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Team BTask 9",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "band pat-solid",
+       "style": {
+        "background-color": "rgb(185, 139, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "0px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Team ATask 8",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-solid",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  },
+  {
+   "label": "Team ATask 10",
+   "cls": "row",
+   "bars": [
+    {
+     "cls": "bar",
+     "self": {
+      "background-color": "rgba(0, 0, 0, 0)",
+      "background-image": "none",
+      "border-top": "0px none rgb(230, 237, 243)",
+      "border-right": "0px none rgb(230, 237, 243)",
+      "border-bottom": "0px none rgb(230, 237, 243)",
+      "border-left": "0px none rgb(230, 237, 243)",
+      "border-radius": "0px",
+      "clip-path": "none",
+      "opacity": "1"
+     },
+     "parts": [
+      {
+       "cls": "shape sh-soft fillbody pat-hatch",
+       "style": {
+        "background-color": "rgb(90, 169, 240)",
+        "background-image": "repeating-linear-gradient(45deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(0, 0, 0, 0.55) 3px, rgba(0, 0, 0, 0.55) 7px)",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "4px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      },
+      {
+       "cls": "grip",
+       "style": {
+        "background-color": "rgba(0, 0, 0, 0)",
+        "background-image": "none",
+        "border-top": "0px none rgb(230, 237, 243)",
+        "border-right": "0px none rgb(230, 237, 243)",
+        "border-bottom": "0px none rgb(230, 237, 243)",
+        "border-left": "0px none rgb(230, 237, 243)",
+        "border-radius": "3px",
+        "clip-path": "none",
+        "opacity": "1"
+       }
+      }
+     ]
+    }
+   ],
+   "strips": []
+  }
+ ]
+}
