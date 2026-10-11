@@ -1,0 +1,29 @@
+# The page, for hosts without CloudFront + S3 (the Dockerfile's `web` target).
+# Same split as CloudFront on AWS: `/api/*` to the sync server, everything else static.
+# The WebSocket at /api/connect needs nothing extra; reverse_proxy upgrades it.
+{
+	admin off
+}
+
+:8080 {
+	encode zstd gzip
+
+	handle /api/* {
+		reverse_proxy api:8080
+	}
+
+	handle {
+		root * /srv
+		# Hashed names are immutable. Everything else (index.html, the unhashed shared
+		# modules the bundle imports by name, AGENTS.md) revalidates on every load, or
+		# a returning visitor runs a new page against an old scheduler.
+		@hashed path /assets/*
+		header @hashed Cache-Control "public, max-age=31536000, immutable"
+		@unhashed not path /assets/*
+		header @unhashed Cache-Control "no-cache"
+		# ponytail: a redeploy replaces /srv, so a tab still holding the previous
+		# index.html 404s on its lazily loaded chunks until reload. S3 kept old assets;
+		# keep a copy of the previous release's assets/ here if that ever bites.
+		file_server
+	}
+}

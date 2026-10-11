@@ -1,0 +1,5 @@
+# Mechanical reformats. GitHub reads this file by itself; locally:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# Reformat every .ts/.tsx with oxfmt 0.71.0
+c7d413b3371b07290fbf288b35044d9f61a458ea
