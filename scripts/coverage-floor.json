@@ -1,0 +1,69 @@
+{
+  "floor": {
+    "server": {
+      "lines": 97.1,
+      "branches": 89.2
+    },
+    "page": {
+      "lines": 82.7,
+      "branches": 75
+    }
+  },
+  "include": {
+    "server": [
+      "sync-server/src/**/*.ts",
+      "sync-server/src/**/*.mjs",
+      "shared/*.ts"
+    ],
+    "page": [
+      "web/src/**/*.ts",
+      "web/src/**/*.tsx"
+    ]
+  },
+  "exclude": [
+    {
+      "glob": "**/*.test.ts",
+      "why": "tests are the measuring instrument, not the thing measured"
+    },
+    {
+      "glob": "sync-server/test/**",
+      "why": "test helpers and fixtures (hours-fixture.ts, plan-id.guard.ts) exist to serve tests"
+    },
+    {
+      "glob": "scripts/**",
+      "why": "the gate's own harness and tooling; AGENTS.md: scripts/ code is not measured"
+    },
+    {
+      "glob": "docs/**",
+      "why": "docs/original/verify.sched.mjs is a build-time check, not product code"
+    },
+    {
+      "glob": "shared/pairwise.js",
+      "why": "vendored library, pinned by vendor.test.ts; not ours to cover"
+    },
+    {
+      "glob": "shared/*.js",
+      "why": "generated from shared/*.ts by tsc; the .ts sources are what the server suite measures"
+    },
+    {
+      "glob": "**/*.d.ts",
+      "why": "declarations emit no code"
+    },
+    {
+      "glob": "web/dist/**",
+      "why": "build output; web/src is measured through its source maps"
+    },
+    {
+      "glob": "web/dist-cov/**",
+      "why": "the unminified build the coverage run measures; web/src is measured through its source maps"
+    },
+    {
+      "glob": "**/node_modules/**",
+      "why": "third-party code"
+    },
+    {
+      "glob": "shared/types.ts",
+      "why": "types only: emits no code, so there is nothing to run or count"
+    }
+  ]
+}
