@@ -1,0 +1,16 @@
+# Timeline Studio
+
+> A planning tool whose dates are computed rather than entered. You describe the work,
+> how long each piece takes and what must precede what; the scheduler answers when it
+> lands. A plan is one shared document and every change is a command.
+
+**The token in the share link — the part after `#` — is the whole credential.** Never put
+it in a URL, a log line, or a commit. Repeated here rather than left to the reference
+below because it is the one mistake that cannot be undone.
+
+Read **[/AGENTS.md](/AGENTS.md)**. It is the whole reference, and it indexes everything
+else — the OpenAPI spec, the command vocabulary, the scheduler.
+
+This file used to list those itself. Two indexes is two copies, and the one nobody
+maintains is the one that goes on naming a file after it has been renamed — a lying index
+is worse than no index. So there is one, it lives in the reference, and this points at it.
