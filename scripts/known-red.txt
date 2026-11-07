@@ -1,0 +1,11 @@
+# CHECKS THAT ARE RED ON PURPOSE, one exact check name per line.
+#
+# Not a mute button — a LEDGER. The gate fails on anything red that is not named
+# here, and it also fails when a name here starts passing, because a baseline
+# that only ever grows is a list nobody trusts and therefore nobody reads.
+#
+# EMPTY, AND THAT IS THE POINT. It held four entries for about an hour on
+# 2026-09-19. All four turned out to be the harness rather than the page — a
+# drag aimed underneath the pinned inspector, and two edits typed into a folded
+# panel that never took focus. The suite is 257/257 (2026-09-20). Keep it that
+# way: a name added here should come with the task id that will remove it again.
