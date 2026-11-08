@@ -1,0 +1,1 @@
+../../shared/schedule.d.ts

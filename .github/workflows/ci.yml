@@ -1,0 +1,197 @@
+name: CI
+
+# Tests on every push and PR. On `main`, `build` also builds both images (Dockerfile: `api`
+# and `web`) in parallel with the tests and pushes them to ghcr.io as `sha-<commit>`. Once
+# `check` and `build` are both green, `release` points `:latest` at them and sends a signed
+# "new version" notice to https://hooks.rascaltwo.com, which makes the homelab NAS pull +
+# redeploy (RascalTwo/homelab, `nas-apps/deployer`). GitHub never reaches into that network:
+# the notice only raises a flag, and the NAS decides what runs.
+#
+# `main` is a single parentless commit force-pushed on every publish (see CLAUDE.md), so
+# there is nothing to diff against and no `paths:` filter — every push runs the tests. What a
+# push may skip is the PUBLISH + DEPLOY: see the `gate` step in `build`.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # MATCH THE DOCKERFILE (node:24-slim). The sync-server tests exercise code that
+      # runs in that image, and Node 20 resolves ESM differently enough to fail
+      # `room.test.ts` on a file that plainly exports what it imports.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: |
+          npm ci --prefix scripts || npm install --prefix scripts
+          npm ci --prefix sync-server || npm install --prefix sync-server
+
+      # shared/*.js and web/dist/ are generated and gitignored; this one script builds both
+      # halves and installs web/'s own dependencies if they are missing.
+      - name: Build shared/ and bundle the page
+        working-directory: scripts
+        run: npm run build
+
+      # The sync-server suite, the browser suite (the real page in headless Chrome against
+      # a stub API — no AWS, no MinIO) and the shared-code parity check, compared against
+      # known-red.txt: anything red that is not named there fails the run.
+      - name: Run the gate
+        working-directory: scripts
+        env:
+          PUPPETEER_EXECUTABLE_PATH: /usr/bin/google-chrome
+        run: ./check-gate.sh
+
+  # Runs IN PARALLEL with `check`: it pushes only `sha-<commit>` tags, never `:latest`, because
+  # the NAS pulls `:latest` and nothing untested may be what a pull picks up. `release` moves
+  # `:latest` once `check` AND this job are green. A failed `check` leaves orphan sha- tags;
+  # cleanup-images.yml prunes everything outside the last 10 deployed SHAs.
+  build:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      changed: ${{ steps.gate.outputs.changed }}
+      api: ${{ steps.api.outputs.digest }}
+      web: ${{ steps.web.outputs.digest }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # REDEPLOY ONLY WHEN SOMETHING THE IMAGES ARE BUILT FROM HAS CHANGED. A docs-only publish
+      # used to rebuild both images and restart the app for nothing. With one parentless commit
+      # per publish there is no diff to ask, but git TREE ids are content hashes: the same files
+      # give the same id in every squash. So hash the trees the Dockerfile builds from
+      # (everything it COPYs or builds with; not docs/, assistant/, .github/ or the root
+      # markdown), stamp the result on both images as a label, and compare it with the label on
+      # the image the NAS is running RIGHT NOW (`/api/health` says which commit that is; every
+      # commit has a `sha-<commit>` tag). Not with `:latest`: a publish whose notice never
+      # landed would make `latest` newer than what runs, and the next identical push would be
+      # skipped while the NAS stayed behind.
+      # FAILS OPEN: no answer from the NAS, no tag, no label (the first run after this was
+      # added) all mean "deploy". A manual run (workflow_dispatch) always deploys, which is
+      # also how to retry a deploy that failed on the NAS with unchanged inputs.
+      - id: gate
+        env:
+          FORCE: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          want=$(git rev-parse HEAD:sync-server HEAD:web HEAD:shared HEAD:scripts HEAD:Dockerfile HEAD:.dockerignore | sha256sum | cut -d' ' -f1)
+          live=""; have=""; changed=true
+          if [ "$FORCE" != true ]; then
+            live=$(curl -fsS --max-time 10 https://timeline-studio.rascaltwo.com/api/health | jq -r '.commit // empty') || live=""
+            [ -z "$live" ] || have=$(docker buildx imagetools inspect "ghcr.io/rascaltwo/timeline-studio:sha-$live" \
+              --format '{{json .Image}}' | jq -r '.config.Labels["io.rascaltwo.inputs"] // empty') || have=""
+            [ -n "$have" ] && [ "$have" = "$want" ] && changed=false
+          fi
+          echo "inputs=$want" >> "$GITHUB_OUTPUT"
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+          echo "inputs $want; NAS runs ${live:-unknown} with ${have:-no label}; publish+deploy: $changed" | tee -a "$GITHUB_STEP_SUMMARY"
+
+      # No provenance/SBOM: they show up in ghcr as untagged child versions, which the
+      # image cleanup must then know never to delete.
+      - id: api
+        if: steps.gate.outputs.changed == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: api
+          push: true
+          provenance: false
+          sbom: false
+          build-args: GIT_SHA=${{ github.sha }}
+          tags: ghcr.io/rascaltwo/timeline-studio:sha-${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            io.rascaltwo.inputs=${{ steps.gate.outputs.inputs }}
+          # One cache scope per image: with the default scope each build overwrites the
+          # other's cache, leaving only the last one (docs.docker.com/build/cache/backends/gha).
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,scope=api,mode=max
+
+      - id: web
+        if: steps.gate.outputs.changed == 'true'
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: web
+          push: true
+          provenance: false
+          sbom: false
+          build-args: GIT_SHA=${{ github.sha }}
+          tags: ghcr.io/rascaltwo/timeline-studio-web:sha-${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=https://github.com/${{ github.repository }}
+            org.opencontainers.image.revision=${{ github.sha }}
+            io.rascaltwo.inputs=${{ steps.gate.outputs.inputs }}
+          cache-from: type=gha,scope=web
+          cache-to: type=gha,scope=web,mode=max
+
+  # Promote: only reached when `check` and `build` are both green. Retags by digest (no
+  # rebuild, same digests the notice names), then tells the NAS.
+  release:
+    needs: [check, build]
+    if: needs.build.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Move :latest to the tested digests
+        env:
+          API: ${{ needs.build.outputs.api }}
+          WEB: ${{ needs.build.outputs.web }}
+        run: |
+          # --prefer-index=false: a plain copy. The default wraps the image in a new index with
+          # a DIFFERENT digest, and the NAS verifies the digests named in the notice.
+          printf '%s\n' "timeline-studio $API" "timeline-studio-web $WEB" | while read -r name digest; do
+            docker buildx imagetools create --prefer-index=false -t "ghcr.io/rascaltwo/$name:latest" "ghcr.io/rascaltwo/$name@$digest"
+            got=$(docker buildx imagetools inspect "ghcr.io/rascaltwo/$name:latest" --format '{{json .Manifest}}' | jq -r .digest)
+            [ "$got" = "$digest" ] || { echo "::error::$name:latest is $got, not the tested $digest"; exit 1; }
+          done
+
+      - name: Signed deploy notice
+        env:
+          SECRET: ${{ secrets.DEPLOY_WEBHOOK_SECRET }}
+          API: ${{ needs.build.outputs.api }}
+          WEB: ${{ needs.build.outputs.web }}
+        run: |
+          # Fail loudly: images published but never deployed should be a red run, not a log line.
+          [ -n "$SECRET" ] || { echo "::error::DEPLOY_WEBHOOK_SECRET not set — published, NOT deployed"; exit 1; }
+          body=$(printf '{"app":"timeline-studio","digests":{"api":"%s","web":"%s"},"sha":"%s","ts":%s}' \
+            "$API" "$WEB" "$GITHUB_SHA" "$(date +%s)")
+          sig="sha256=$(printf '%s' "$body" | openssl dgst -sha256 -hmac "$SECRET" -r | cut -d' ' -f1)"
+          curl -fsS --max-time 20 -X POST https://hooks.rascaltwo.com/deploy \
+            -H "Content-Type: application/json" -H "X-Signature-256: $sig" --data "$body"
