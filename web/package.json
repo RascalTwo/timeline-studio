@@ -1,0 +1,38 @@
+{
+  "name": "timeline-studio-web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@arizeai/openinference-semantic-conventions": "2.12.0",
+    "@opentelemetry/api": "1.9.1",
+    "@opentelemetry/exporter-trace-otlp-proto": "0.222.0",
+    "@opentelemetry/resources": "2.11.0",
+    "@opentelemetry/sdk-trace-base": "2.11.0",
+    "@opentelemetry/sdk-trace-web": "2.11.0",
+    "@rascaltwo/pairwise-sorter": "github:RascalTwo/pairwise-sorter#97ba2e2c4b81d4809c19d519a93206acbfaa2ae6",
+    "cytoscape": "^3.34.3",
+    "cytoscape-edgehandles": "^4.0.1",
+    "dompurify": "^3.4.15",
+    "marked": "^18.0.13",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "vendor": {
+    "@rascaltwo/pairwise-sorter": "pairwise.js"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.7",
+    "@vitejs/plugin-react": "6.1.1",
+    "typescript": "5.9.3",
+    "vite": "8.2.2"
+  },
+  "allowScripts": {
+    "github:RascalTwo/pairwise-sorter#97ba2e2c4b81d4809c19d519a93206acbfaa2ae6": true
+  }
+}

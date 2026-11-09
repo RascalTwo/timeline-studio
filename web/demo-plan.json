@@ -1,0 +1,503 @@
+{
+	"schemaVersion": 11,
+	"title": "Demo — opening the second bakery (anyone can edit this)",
+	"start": "2026-09-07",
+	"timeZone": "America/Chicago",
+	"sprint": {
+		"weeks": 2,
+		"start": "2026-09-07"
+	},
+	"hours": {
+		"week": {
+			"sun": [],
+			"mon": [
+				[
+					"08:00",
+					"16:00"
+				]
+			],
+			"tue": [
+				[
+					"08:00",
+					"16:00"
+				]
+			],
+			"wed": [
+				[
+					"08:00",
+					"16:00"
+				]
+			],
+			"thu": [
+				[
+					"08:00",
+					"16:00"
+				]
+			],
+			"fri": [
+				[
+					"08:00",
+					"16:00"
+				]
+			],
+			"sat": []
+		},
+		"dates": {
+			"2026-09-24": []
+		}
+	},
+	"channelLabels": {
+		"colors": "Project"
+	},
+	"lanes": [
+		{
+			"id": "L1",
+			"label": "Me",
+			"cap": 1,
+			"short": "Me"
+		},
+		{
+			"id": "L2",
+			"label": "Fit-out crew",
+			"cap": 2,
+			"short": "Crew"
+		},
+		{
+			"id": "L3",
+			"label": "Waiting on other people",
+			"cap": 1,
+			"short": "Others"
+		}
+	],
+	"colors": [
+		{
+			"id": "site",
+			"label": "The site",
+			"color": "#5aa9f0"
+		},
+		{
+			"id": "kit",
+			"label": "Equipment",
+			"color": "#f0a35a"
+		},
+		{
+			"id": "staff",
+			"label": "People",
+			"color": "#7fd18d"
+		},
+		{
+			"id": "legal",
+			"label": "Paperwork",
+			"color": "#d88ce0"
+		}
+	],
+	"borders": [
+		{
+			"id": "b0",
+			"label": "not applicable",
+			"style": "none"
+		},
+		{
+			"id": "b1",
+			"label": "reversible",
+			"style": "dotted"
+		},
+		{
+			"id": "b2",
+			"label": "one-way door",
+			"style": "solid"
+		}
+	],
+	"fills": [
+		{
+			"id": "f1",
+			"label": "known",
+			"pattern": "underline"
+		},
+		{
+			"id": "f2",
+			"label": "estimated",
+			"pattern": "solid"
+		},
+		{
+			"id": "f3",
+			"label": "guessed",
+			"pattern": "hatch"
+		}
+	],
+	"shapes": [
+		{
+			"id": "s1",
+			"label": "task",
+			"shape": "soft"
+		},
+		{
+			"id": "s2",
+			"label": "decision",
+			"shape": "diamond"
+		},
+		{
+			"id": "s3",
+			"label": "opening",
+			"shape": "chevron"
+		}
+	],
+	"milestones": [
+		{
+			"id": "m1",
+			"label": "Soft opening",
+			"date": "2026-10-19"
+		},
+		{
+			"id": "m2",
+			"label": "Grand opening",
+			"date": "2026-11-09"
+		}
+	],
+	"tasks": [
+		{
+			"id": "lease",
+			"label": "Sign the lease",
+			"lane": "L1",
+			"border": "b2",
+			"fill": "f1",
+			"shape": "s2",
+			"color": [
+				"site",
+				"legal"
+			],
+			"dur": 480,
+			"deps": [],
+			"ms": "m1",
+			"desc": "The **one-way door** of this plan — see the solid border.\n\nNotice the bar is as wide as the work *actually took*, while `Duration` still holds the estimate. The gap between them is the tick on the bar.",
+			"url": "https://example.com/lease.pdf",
+			"ref": "LEASE-114",
+			"createdAt": "2026-09-07T09:00:00.000Z",
+			"sessions": [
+				{
+					"start": "2026-09-07T13:00:00.000Z",
+					"stop": "2026-09-07T21:00:00.000Z"
+				}
+			],
+			"done": true
+		},
+		{
+			"id": "survey",
+			"label": "Survey the unit",
+			"lane": "L2",
+			"border": "b1",
+			"fill": "f1",
+			"shape": "s1",
+			"color": [
+				"site"
+			],
+			"dur": 960,
+			"deps": [
+				"lease"
+			],
+			"ms": "m1",
+			"desc": "Finished at **16:30**, not at the end of the day — dates carry a time now.",
+			"createdAt": "2026-09-07T09:00:00.000Z",
+			"sessions": [
+				{
+					"start": "2026-09-08T13:00:00.000Z",
+					"stop": "2026-09-10T21:30:00.000Z"
+				}
+			],
+			"done": true
+		},
+		{
+			"id": "plans",
+			"label": "Draw up the fit-out plans",
+			"lane": "L2",
+			"border": "b1",
+			"fill": "f2",
+			"shape": "s1",
+			"color": [
+				"site"
+			],
+			"dur": 1440,
+			"deps": [
+				"survey"
+			],
+			"ms": "m1",
+			"sessions": [
+				{
+					"start": "2026-09-10T13:00:00.000Z",
+					"stop": "2026-09-10T21:00:00.000Z"
+				},
+				{
+					"start": "2026-09-11T13:00:00.000Z",
+					"stop": "2026-09-11T17:30:00.000Z"
+				}
+			],
+			"desc": "In progress: a start with no finish.",
+			"refinedAt": "2026-09-09T17:00:00.000Z",
+			"createdAt": "2026-09-07T09:00:00.000Z",
+			"comments": [
+				{
+					"id": "c-plans-1",
+					"text": "Architect has the survey. First draft of the layout due end of the week.",
+					"at": "2026-09-09T15:10:00.000Z",
+					"by": "Sam"
+				},
+				{
+					"id": "c-plans-2",
+					"text": "Draft in — the oven wall has to move **40 cm** to clear the extraction duct. Revised plans by Monday.",
+					"at": "2026-09-11T20:45:00.000Z",
+					"by": "Priya",
+					"editedAt": "2026-09-11T21:02:00.000Z"
+				}
+			]
+		},
+		{
+			"id": "permit",
+			"label": "Council grants the change-of-use permit",
+			"lane": "L3",
+			"border": "b0",
+			"fill": "f3",
+			"shape": "s1",
+			"color": [
+				"legal"
+			],
+			"dur": 5760,
+			"deps": [
+				"plans"
+			],
+			"ms": "m1",
+			"noQueue": true,
+			"desc": "Somebody else's work, so it is **their** task — named after them — and it is set to *run in parallel* — twelve days that do not consume the crew.\n\nThis is the whole convention: there is no \"waiting on\" field. You depend on their task.",
+			"refinedAt": "2026-09-09T17:00:00.000Z",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "kit-quote",
+			"label": "Get three quotes for the ovens",
+			"lane": "L1",
+			"border": "b1",
+			"fill": "f1",
+			"shape": "s1",
+			"color": [
+				"kit"
+			],
+			"dur": 480,
+			"deps": [],
+			"ms": "m1",
+			"ref": "QUOTE-3",
+			"createdAt": "2026-09-07T09:00:00.000Z",
+			"sessions": [
+				{
+					"start": "2026-09-11T13:00:00.000Z",
+					"stop": "2026-09-11T21:00:00.000Z"
+				}
+			],
+			"done": true
+		},
+		{
+			"id": "oven",
+			"label": "Decide: gas or electric ovens",
+			"lane": "L1",
+			"border": "b2",
+			"fill": "f1",
+			"shape": "s2",
+			"color": [
+				"kit"
+			],
+			"dur": 60,
+			"deps": [
+				"kit-quote"
+			],
+			"ms": "m1",
+			"desc": "A decision, drawn as a **diamond** — that is the *shape* channel, not the duration. It still takes an hour of somebody's day, because nothing takes no time.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "order-oven",
+			"label": "Order the ovens",
+			"lane": "L2",
+			"border": "b1",
+			"fill": "f2",
+			"shape": "s1",
+			"color": [
+				"kit"
+			],
+			"dur": 480,
+			"deps": [
+				"oven"
+			],
+			"ms": "m1",
+			"due": "2026-09-27T05:00:00.000Z",
+			"desc": "Has a *deadline* — look for the marker on the bar and the slack beside it.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "leadtime",
+			"label": "Oven lead time (the supplier)",
+			"lane": "L3",
+			"border": "b0",
+			"fill": "f3",
+			"shape": "s1",
+			"color": [
+				"kit"
+			],
+			"dur": 10080,
+			"deps": [
+				"order-oven"
+			],
+			"ms": "m1",
+			"noQueue": true,
+			"desc": "Three weeks of waiting that belongs to the supplier, not to us.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "build",
+			"label": "Fit out the kitchen",
+			"lane": "L2",
+			"border": "b1",
+			"fill": "f2",
+			"shape": "s1",
+			"color": [
+				"site",
+				"kit"
+			],
+			"dur": 3840,
+			"deps": [
+				"permit",
+				"plans"
+			],
+			"ms": "m1",
+			"desc": "Two projects at once — the bar is banded.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "install",
+			"label": "Install and commission the ovens",
+			"lane": "L2",
+			"border": "b1",
+			"fill": "f2",
+			"shape": "s1",
+			"color": [
+				"kit"
+			],
+			"dur": 960,
+			"deps": [
+				"build",
+				"leadtime"
+			],
+			"ms": "m1",
+			"notBefore": "2026-10-07T05:00:00.000Z",
+			"desc": "Cannot start before the gas is signed off, whatever else finishes.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "hire",
+			"label": "Hire and train two bakers",
+			"lane": "L1",
+			"border": "b1",
+			"fill": "f3",
+			"shape": "s1",
+			"color": [
+				"staff"
+			],
+			"dur": 2400,
+			"deps": [],
+			"ms": "m1",
+			"desc": "Nothing blocks this — it waits only for a free slot in its lane.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "hygiene",
+			"label": "Food hygiene inspection (the inspector)",
+			"lane": "L3",
+			"border": "b2",
+			"fill": "f2",
+			"shape": "s1",
+			"color": [
+				"legal"
+			],
+			"dur": 480,
+			"deps": [
+				"install",
+				"hire"
+			],
+			"ms": "m1",
+			"noQueue": true,
+			"due": "2026-10-18T05:00:00.000Z",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "softopen",
+			"label": "Soft opening for friends and family",
+			"lane": "L1",
+			"border": "b2",
+			"fill": "f1",
+			"shape": "s3",
+			"color": [
+				"staff",
+				"site"
+			],
+			"dur": 480,
+			"deps": [
+				"hygiene"
+			],
+			"ms": "m1",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "signage",
+			"label": "Commission the neon sign",
+			"image": "data:image/webp;base64,UklGRjIIAABXRUJQVlA4ICYIAADQNACdASosAXgAPp1GnUulo6Yho7S82MATiWVu3VzU+RmL+z3TFe6/Zj9u8yt+s/K7zd/H+ZX+V8xfrZ0H/6rxHvG/YE/mP9x9BvO49R+wr/Mf7p1TP3C9gz9wy2fwKHh1LKa7dCdt2axMiNFCAoL/7kUm8P58ktWpm5rr6hXi4MejEVWq3SxK+Xc0L+rj2c29pYh5yXJXSzWSFNMyS62rMwkOSGlR9PVKzIDNB33HZFYHUNB8hWHvIjhsPYcHhdvoq+IrI4iEl7yTiJbWulXtYAwfM0tnNBAO6SPCVgz2QC7rSOlRPQH6+BUPNEw6ptRi4BAdo20BekMhT8UoKuRQ8wG30z2EigiZFdtkStZZdNmrie5o9dlep5RZRNpSaCw9OTFY00RA3cu6JNhjE9Vaopic5wjzXzXsiLiGol4uaftAAY+kwBN2L2Zc9A6e2ejvbHCnL6jolgii74tsW0ESOzWAFLnDIvrqopDSkxMBdluInP7Xllasxtmejy0Gn145uwODfHfccCr8twnAYpDhyULdpr6v91a3i9wbr48Aq+uC3tLEr5dzQv6uPW8wAAD+/kehaNUdYJ8mx0srkDTXG+elYub3/Y1akQf+Qnf/ItRm2n8n+VA8aXCxwRNpPr0Tobe9vT7sSeFmVgPezBUMKLy2BdTLKnVzjmYZw3vgTXpF/5DsRSFVOULgjn/k7Be2noQSJika4y4VYm5zROVOcOGOE3Dr6MmYK+B4RNhDx1Kr1qKykRo8aFJPsXWJd8G758EBIJekObWQQPN65/9hX1f8z0gAAouoSNrXgEjlovoFg7Yp0eJmoKoKSvkXVqWhYjw/0shTNdcU+CE2XJvArPe+scbOPN+iWPw9LLlBOAycQhcS2RboIlDsleyEw4/QC+dywV9A+maJYrPqT/pYh7sJJ8n36n0wEk8YELyuvcJDRCFZSu/60Lfoe4/4zNlT3ECYAlcx9HZKntn0/25cEs7iXy3TZYLxcOlMF50OFEFplqD3L/mfjcF2us5FIlOJXBSoxtoSCJnpaHPrI96lir7D+/5xpId2En//y8j22MpAuLEpRY3lfM+qQnlTK2+qkPeJ2aZgvSwOjFheHY0xK5PFxPf+86k6npLLv6igKw/AmZ+X2her0/CE7lfqdTD/aB3Nk9dHDNtftOpHzEe54Xv8AX12sDCngREoViZEqKjCBNJIH24BYTd3B1NPbB0pDZ16EE/9wDoBAulxF88usNb0lOfDDH5IekrUjoWD7xel9UjYeMxxwxy9PFk20WhC6FIVHzTkUqSvcO1Zc5/0h1YwcLEbjRU4jTIW3n5D7o4GKI0ZDlBF9lWczzVWL3QETTyKLhX3OGf4pNMQeCg1PElKjkP/kGRz2do2Viq/xgUL6vgZj0zxSTnGIMyUbSpUocaTxJaATOOwDx3AScXNoazxBEnZGsvNzysKt8iX5K7pmqUqR1gZ0S0yV/0cxs+0uL5PVD4x2idCCdVRSZYa2N+ScKDcmDXRKr5WWbTqJT2nr+yBzog5E1Pfmxj08Chghe4Owg9lNv9R7LkwLLpCALioZjF2DBU9xGRDiSFfBhNQtgrPMwafFPxlz+6SqTtixv9hAhyto3ChsVw+HftqFyhCL22cje5sxWW+HpfSojPn4sZWj/vuzExqzYzHidwjG/ZtIt43mwkSRNIgQ8uFCFH7txxNcPNZUh4MfzdeSW5MwGEYenvru7vxvjImp7QglgRrY252krgfFRXAcRfAFpgjEvDVtZtNKh+R+iM5Ts1z9ZFyqOVH3//OBiMz4JBnrgKJ+DGsxuOOF68SEBJH2lZAWOQVihtRk6YMCRatjznMyHLsWB8mkzczSJ5I2BB37T/pf8SWQCrJNcHSI/jhXGv76mWQFbwgjW36rR9PI0ifrqkxDL8akp0x6shTf0tCo8M65OZ9tEAxGM7kSAiP4qzHqNkA+POB2fONjlJPOSVfcQ+FkXjCFKINHeFbv7XeVl3+lLXF76X507JvLl6kqVRxVSOVHkdxzEXqb6ADrac/RT+BNLmH8qlGPSOkuZHN2s7nKNEWCD2ziUUVysqMCj9zkDRmwwhz/OsT2IuJvwMkxCaeUO1yPwmdUC/mV/I+HjsEcJQTSZVW22VOvLskNXNTxpgyG2T1QO/xNN4ljd6pt2yh6HeCnvYTR+9pjnIaTuuogFr5LbxQ6swO967qPPn15IlVxpZRaKHNhgKvPNsWlY4I3hHpqU2lHRBNwvJP8HARQna6OWWSHwGWO0DWlDY6ak69+KC9qoHudsEH1+nGfarSY1U4GmeLG7JFNq8OsyaCdscjo996Aqua3O97MC01IwpOakZVwGViXITwQDNNM+cv+C+xnsTttz6BiHqjzIxEN9N+3S/3pdLN5GXBIRxBedEn7iZ5AfBNhhlYmTWyW/pUPQ/6VYagwlJsUZYgDy6XRFAri4wNa1ckacgqKuvb0IGWqQq1go00fc/kSHUCXPPo3x7RGVjtDFq01l0EjOZ4GBMr3kk7Ko7qHsYjs+f66i49BtKlBwnW+w7Q5YFN88H2myiddSnHy0GRDDwlsT9iSfZDEzh0H1tnstCKUker/+c0W59df1pwkkPgSdVPIhwUQiJcXDRw9EUpmVkuWRb7NQQXQ/9dFTvfqG6/JsqSWb7TxOUwMKOeGWBHsty+bv6KQ4RCveROHWe+hzJCpjVRfXMlyHKzWoSlJot6RfCwV/WC1dQWlSfME1isG0CjGCtTAsNqzuIboNO9DOngAAAAAFI6bh3+lpQ+Yk791VlvuFQA",
+			"lane": "L1",
+			"border": "b1",
+			"fill": "f3",
+			"shape": "s1",
+			"color": [
+				"site"
+			],
+			"dur": 960,
+			"deps": [],
+			"ms": "m2",
+			"desc": "**Cancelled**, not deleted. It stays on the record and stops holding anything up.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "press",
+			"label": "Press and local radio",
+			"lane": "L1",
+			"border": "b1",
+			"fill": "f2",
+			"shape": "s1",
+			"color": [
+				"staff"
+			],
+			"dur": 960,
+			"deps": [
+				"softopen"
+			],
+			"ms": "m2",
+			"url": "https://example.com/press-kit",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		},
+		{
+			"id": "grand",
+			"label": "Grand opening",
+			"lane": "L1",
+			"border": "b2",
+			"fill": "f2",
+			"shape": "s3",
+			"color": [
+				"site",
+				"staff",
+				"kit",
+				"legal"
+			],
+			"dur": 480,
+			"deps": [
+				"press"
+			],
+			"ms": "m2",
+			"desc": "Every project at once, so the bar shows all four bands.\n\n| what | when |\n| --- | --- |\n| doors open | 09:00 |\n| ribbon | 10:00 |\n\nDescriptions are **GitHub-flavoured markdown** — tables, `code`, lists, the lot.",
+			"createdAt": "2026-09-07T09:00:00.000Z"
+		}
+	]
+}
