@@ -1,0 +1,86 @@
+# Keep ghcr.io tidy: retain `latest` + the images of the last 10 SUCCESSFUL production
+# deploys (as reported by the NAS through GitHub Deployments); delete every other version.
+# Guard: if no successful deploy is on record, delete nothing.
+# Copied from RascalTwo/rascaltwo.com, looped over this repo's two packages.
+name: cleanup images
+
+on:
+  deployment_status:          # runs right after the NAS reports a deploy result
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only list what would be deleted"
+        type: boolean
+        default: true
+
+permissions:
+  packages: write
+  deployments: read
+  contents: read
+
+env:
+  KEEP: 10
+  OWNER: RascalTwo
+  # Deletions are real only when the switch below is on (set after a verified dry run),
+  # or when a manual run explicitly unticks dry_run.
+  ENABLE_DELETE: "true"   # on since 2026-10-03: the first dry run kept latest + the deployed sha, deleted only untagged leftovers
+
+jobs:
+  cleanup:
+    if: github.event_name == 'workflow_dispatch' || github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prune old image versions
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRY: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || 'auto' }}
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+
+          # Newest-first production deployments that EVER reached success → keep their SHAs.
+          # (Not "latest status": GitHub auto-marks older deployments `inactive` once a newer
+          # one succeeds, so a good deploy's latest status stops being `success`.)
+          keep=()
+          for row in $(gh api "repos/$repo/deployments?environment=production&per_page=100" --jq '.[] | "\(.id):\(.sha)"'); do
+            id=${row%%:*}; sha=${row#*:}
+            ok=$(gh api "repos/$repo/deployments/$id/statuses?per_page=100" --jq 'any(.[]; .state == "success")')
+            [ "$ok" = true ] || continue
+            [[ " ${keep[*]:-} " == *" $sha "* ]] || keep+=("$sha")
+            [ "${#keep[@]}" -ge "$KEEP" ] && break
+          done
+          echo "successful deploys kept: ${#keep[@]}"
+          printf '  sha-%s\n' "${keep[@]:-}"
+          if [ "${#keep[@]}" -eq 0 ]; then echo "guard: no successful deploy on record — deleting nothing"; exit 0; fi
+
+          delete=true
+          if [ "$DRY" = true ] || { [ "$DRY" = auto ] && [ "$ENABLE_DELETE" != true ]; }; then delete=false; fi
+
+          # A tag may point at an image INDEX whose child manifests (platform image,
+          # provenance) appear as separate *untagged* versions. Deleting those breaks the
+          # kept image — so collect every digest the kept tags reference and protect them.
+          echo "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin >/dev/null
+          for PACKAGE in timeline-studio timeline-studio-web; do
+          echo "== $PACKAGE"
+          protect=" "
+          for ref in latest "${keep[@]/#/sha-}"; do
+            raw=$(docker buildx imagetools inspect "ghcr.io/${OWNER,,}/$PACKAGE:$ref" --raw 2>/dev/null) || continue
+            for d in $(jq -r '.manifests[]?.digest' <<<"$raw"); do protect+="$d "; done
+          done
+          echo "child manifests protected: $(wc -w <<<"$protect")"
+
+          gh api --paginate "users/$OWNER/packages/container/$PACKAGE/versions" \
+            --jq '.[] | "\(.id) \(.name) \(.metadata.container.tags | join(","))"' |
+          while read -r vid digest tags; do
+            keepit=false
+            case ",$tags," in *",latest,"*) keepit=true ;; esac
+            for s in "${keep[@]}"; do case ",$tags," in *",sha-$s,"*) keepit=true ;; esac; done
+            [[ "$protect" == *" $digest "* ]] && { echo "KEEP   $vid [child of a kept image]"; continue; }
+            if $keepit; then echo "KEEP   $vid [$tags]"; continue; fi
+            if $delete; then
+              gh api -X DELETE "users/$OWNER/packages/container/$PACKAGE/versions/$vid" && echo "DELETE $vid [$tags]"
+            else
+              echo "WOULD DELETE $vid [${tags:-untagged}]"
+            fi
+          done
+          done
